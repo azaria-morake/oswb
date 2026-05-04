@@ -1,0 +1,117 @@
+.global-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.alert-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.alert-modal {
+  position: relative;
+  background-color: var(--bg-dark);
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  border: 1px solid var(--border-dark);
+  /* Polygonal chamfered corners for the modal itself */
+  clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
+  box-shadow: 0 0 50px rgba(255, 90, 0, 0.15);
+}
+
+.alert-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.alert-header {
+  margin-bottom: 25px;
+}
+
+.alert-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--accent-orange);
+  color: var(--text-dark);
+  font-size: 2rem;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.alert-title {
+  font-family: var(--font-wide);
+  font-size: 1.5rem;
+  color: var(--accent-orange);
+  letter-spacing: 2px;
+}
+
+.alert-message {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 35px;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.alert-subtext {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 10px;
+}
+
+.alert-btn-wrapper {
+  width: 100%;
+  max-width: 280px;
+}
+
+.alert-btn {
+  padding: 15px 30px;
+}
+
+/* Decorative Corners */
+.alert-corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--accent-orange);
+  opacity: 0.5;
+}
+
+.alert-corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.alert-corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.alert-corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.alert-corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+@media (max-width: 480px) {
+  .alert-modal {
+    padding: 30px 20px;
+  }
+  .alert-title {
+    font-size: 1.2rem;
+  }
+  .alert-message {
+    font-size: 1.1rem;
+  }
+}

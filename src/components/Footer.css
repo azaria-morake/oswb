@@ -1,0 +1,90 @@
+.main-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: var(--bg-light);
+  border-top: 1px solid var(--border-light);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-dark);
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  justify-content: center;
+}
+
+.footer-socials a {
+  color: var(--text-dark);
+  transition: transform 0.3s ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-2px);
+}
+
+.footer-newsletter {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+}
+
+.newsletter-form {
+  display: flex;
+  background-color: transparent;
+  border: 1px solid var(--text-dark);
+  border-radius: 2px;
+  overflow: hidden;
+  height: 38px;
+}
+
+.newsletter-form input {
+  background: transparent;
+  border: none;
+  color: var(--text-dark);
+  padding: 0 15px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  outline: none;
+  width: 180px;
+}
+
+.newsletter-form input::placeholder {
+  color: var(--text-muted-light);
+}
+
+.signup-btn {
+  background-color: var(--text-dark);
+  color: var(--bg-light);
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 0 20px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: #333;
+}
+
+@media (max-width: 900px) {
+  .main-footer {
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  .footer-newsletter {
+    justify-content: center;
+    width: 100%;
+  }
+}

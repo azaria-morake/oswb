@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syncopate:wght@700&family=Michroma&display=swap');
+
+:root {
+  --bg-dark: #1F2022; /* Matches mockup dark background closely */
+  --bg-light: #D3D3D3; /* Header/Sidebar/Footer grey */
+  --text-main: #FFFFFF; /* White text on dark bg */
+  --text-dark: #111111; /* Black text on light bg */
+  --text-muted-dark: #777777;
+  --text-muted-light: #666666;
+  --accent-orange: #FF5A00;
+  --accent-orange-hover: #ff7326;
+  --border-dark: #333333;
+  --border-light: #C0C0C0;
+  --border-color: #333333; /* For modal borders */
+  --bg-secondary: #2A2C2F; /* Lighter dark for modals */
+  --bg-color: #1F2022;     /* Base dark color */
+  --text-muted: #777777;   /* Muted text */
+  --font-main: 'Inter', sans-serif;
+  --font-wide: 'Syncopate', sans-serif;
+  --font-hero: 'Michroma', sans-serif;
+  --circuit-opacity: 0.05;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-light); /* Base is light, content box is dark */
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.disabled-link {
+  color: var(--text-muted-light);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.disabled-link:hover {
+  color: var(--text-dark);
+}
+
+.btn-orange-wrapper {
+  display: inline-block;
+  padding: 1px;
+  background-color: var(--accent-orange);
+  clip-path: polygon(17px 0, 100% 0, 100% calc(100% - 17px), calc(100% - 17px) 100%, 0 100%, 0 17px);
+}
+
+.btn-orange-inner {
+  display: inline-block;
+  padding: 3px;
+  background-color: var(--bg-dark);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+}
+
+.btn-orange {
+  background-color: var(--accent-orange);
+  color: var(--text-dark);
+  padding: 12px 24px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.btn-orange:hover {
+  background-color: var(--accent-orange-hover);
+  transform: translateY(-2px);
+}
+
+.btn-orange:active {
+  transform: translateY(0);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: var(--text-main);
+}
+
+/* Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.main-content {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  flex: 1;
+}
+
+.main-grid-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 40px;
+  padding: 40px;
+}
+
+@media (max-width: 1024px) {
+  .main-grid-container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}
+
+/* Modal and Zoom specific styles */
+.react-transform-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.react-transform-component {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted-light);
+}

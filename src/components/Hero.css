@@ -1,0 +1,117 @@
+.hero-section {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  margin-top: -1px; /* seamless connection with header */
+}
+
+.hero-content {
+  position: relative;
+  background-color: var(--bg-dark);
+  display: flex;
+  min-height: 550px;
+  /* Top-right chamfer to expose light grey background beneath */
+  clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* Cyberpunk circuit lines */
+  background: 
+    linear-gradient(90deg, #2a2a2a 1px, transparent 1%) center,
+    linear-gradient(#2a2a2a 1px, transparent 1%) center;
+  background-size: 40px 40px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-image-container {
+  width: 45%;
+  position: relative;
+  background-color: #1a1a1a; /* Dark base to prevent white flash */
+  /* Polygonal shape matching mockup: straight down, angle right, straight down */
+  clip-path: polygon(0 0, 100% 0, 100% 15%, calc(100% - 60px) 25%, calc(100% - 60px) 75%, 100% 85%, 100% 100%, 0 100%);
+  overflow: hidden;
+}
+
+.hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+
+.hero-text-overlay {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 60px;
+  z-index: 10;
+}
+
+.hero-title-container {
+  margin-bottom: 20px;
+}
+
+.hero-title-container h1 {
+  font-family: var(--font-hero);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.highlight-line {
+  color: var(--accent-orange);
+}
+
+.hero-btn-wrapper {
+  margin-top: 20px;
+  width: 280px;
+  height: 55px;
+}
+
+.hero-btn {
+  font-size: 1.2rem;
+  font-family: var(--font-main);
+  font-weight: 800; /* Matching previous state if it was bold */
+}
+
+@media (max-width: 1024px) {
+  .hero-title-container h1 {
+    font-size: 2.5rem;
+  }
+  .hero-text-overlay {
+    padding-left: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    clip-path: none;
+  }
+  .hero-image-container {
+    width: 100%;
+    height: 350px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%);
+  }
+  .hero-text-overlay {
+    width: 100%;
+    padding: 30px 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .hero-title-container h1 {
+    font-size: 2rem;
+  }
+}
