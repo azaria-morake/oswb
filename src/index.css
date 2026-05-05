@@ -117,6 +117,17 @@ button {
   min-height: 100vh;
 }
 
+/* Sticky wrapper — locks TopBanner + Header together as one sticky unit.
+   Both children use position:sticky top:0 within this wrapper. */
+.sticky-header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  /* GPU-composited layer prevents paint jank / shake on mobile scroll */
+  will-change: transform;
+  transform: translateZ(0);
+}
+
 .content-wrapper {
   display: flex;
   flex: 1;

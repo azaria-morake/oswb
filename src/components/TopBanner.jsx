@@ -11,9 +11,6 @@ const TopBanner = () => {
       fontWeight: '700',
       letterSpacing: '1px',
       fontFamily: 'var(--font-hero)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 101,
       textTransform: 'uppercase'
     }}>
       DROP 001: PROCESSED FOR THE STREETS – <span style={{ color: 'var(--accent-orange)' }}>00:22:15</span>

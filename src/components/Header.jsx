@@ -8,101 +8,87 @@ const Header = ({ onCartToggle, cartCount }) => {
   const { triggerNotYetAlert } = useInteraction();
   const [hoveredLink, setHoveredLink] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [adSlide, setAdSlide] = useState(0);
   const searchInputRef = useRef(null);
   const searchWrapperRef = useRef(null);
   const activeLink = 'Home';
 
   const navLinks = ['Home', 'Drops', 'Accessories', 'Collectibles'];
 
+  // Focus search input when opened
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isSearchOpen]);
 
-  // Click away listener
+  // Close search on outside click
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchWrapperRef.current && !searchWrapperRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target)) {
         setIsSearchOpen(false);
       }
     };
-    if (isSearchOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    if (isSearchOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isSearchOpen]);
 
-  // Close search on escape
+  // Escape closes both search and drawer
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === 'Escape') setIsSearchOpen(false);
+      if (e.key === 'Escape') {
+        setIsSearchOpen(false);
+        setIsMobileMenuOpen(false);
+      }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
+  // Auto-advance drawer slideshow while drawer is open
+  const AD_SLIDES = [
+    '/assets/hero_slide/hero_slide1.jpg',
+    '/assets/hero_slide/hero_slide2.jpg',
+    '/assets/hero_slide/hero_slide3.jpg',
+    '/assets/hero_slide/hero_slide4.jpg',
+    '/assets/hero_slide/hero_slide5.jpg',
+    '/assets/hero_slide/hero_slide6.jpg',
+  ];
+  const AD_DURATION = 3000; // ms per slide
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const timer = setInterval(() => {
+      setAdSlide(prev => (prev + 1) % AD_SLIDES.length);
+    }, AD_DURATION);
+    return () => clearInterval(timer);
+  }, [isMobileMenuOpen, adSlide]);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
+
   return (
-    <header className="main-header">
-      <div className="header-left">
-        <div className="logo-container">
-          <img src="/soffwareboyz.svg" alt="Soffware Boyz Logo" className="logo-img" style={{ height: '52px' }} />
+    <>
+      <header className="main-header">
+
+        {/* Logo */}
+        <div className={`header-logo ${isSearchOpen ? 'search-active' : ''}`}>
+          <img src="/soffwareboyz.svg" alt="Soffware Boyz Logo" className="logo-img" />
         </div>
-      </div>
 
-      <motion.div
-        layout
-        ref={searchWrapperRef}
-        className={`search-wrapper ${isSearchOpen ? 'active' : ''}`}
-      >
-        <AnimatePresence mode="wait">
-          {isSearchOpen ? (
-            <motion.div
-              key="search-box"
-              className="search-box"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <Search size={18} className="search-icon-active" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="SEARCH FOR DROPS..."
-                className="search-input"
-              />
-              <button className="search-close-btn" onClick={() => setIsSearchOpen(false)}>
-                <X size={18} className="close-icon" />
-              </button>
-            </motion.div>
-          ) : (
-            <motion.button
-              key="search-trigger"
-              className="icon-btn search-trigger"
-              onClick={() => setIsSearchOpen(true)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Search size={20} strokeWidth={1.5} />
-              <span>Search</span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </motion.div>
+        {/* Spacer — pushes nav + search right on desktop, fills gap on mobile */}
+        <div className="header-spacer" />
 
-      <div className="header-right">
-        <motion.nav layout className="desktop-nav">
+        {/* Desktop nav */}
+        <nav className={`desktop-nav ${isSearchOpen ? 'search-active' : ''}`}>
           <ul onMouseLeave={() => setHoveredLink(null)}>
             {navLinks.map((link, index) => (
               <React.Fragment key={link}>
-                <motion.li
-                  layout
-                  onMouseEnter={() => setHoveredLink(link)}
-                  className="nav-item-container"
-                >
+                <li onMouseEnter={() => setHoveredLink(link)} className="nav-item-container">
                   <button className="disabled-link nav-btn" onClick={triggerNotYetAlert}>
                     {link}
                   </button>
@@ -111,39 +97,195 @@ const Header = ({ onCartToggle, cartCount }) => {
                       layoutId="nav-underline"
                       className="nav-underline"
                       initial={false}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                </motion.li>
-                {index < navLinks.length - 1 && <motion.span layout className="nav-divider">|</motion.span>}
+                </li>
+                {index < navLinks.length - 1 && <span className="nav-divider">|</span>}
               </React.Fragment>
             ))}
           </ul>
-        </motion.nav>
+        </nav>
 
-        <motion.div layout className="header-separator desktop-only"></motion.div>
+        {/* Search */}
+        <div ref={searchWrapperRef} className={`search-wrapper ${isSearchOpen ? 'active' : ''}`}>
+          <AnimatePresence mode="wait" initial={false}>
+            {isSearchOpen ? (
+              <motion.div
+                key="search-box"
+                className="search-box"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Search size={16} className="search-icon-active" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="SEARCH FOR DROPS..."
+                  className="search-input"
+                />
+                <button className="search-close-btn" onClick={() => setIsSearchOpen(false)}>
+                  <X size={16} />
+                </button>
+              </motion.div>
+            ) : (
+              <motion.button
+                key="search-trigger"
+                className="icon-btn search-trigger"
+                onClick={() => setIsSearchOpen(true)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Search size={20} strokeWidth={1.5} />
+                <span>Search</span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
 
-        <motion.button layout className="icon-btn desktop-only" onClick={triggerNotYetAlert}>
-          <span>Account</span>
-          <User size={20} strokeWidth={1.5} />
-        </motion.button>
-        <motion.div layout className="header-separator"></motion.div>
-        <motion.button layout className="cart-btn" onClick={triggerNotYetAlert}>
-          <div className="cart-icon-wrapper">
-            <ShoppingBag size={22} strokeWidth={1.5} />
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </div>
-          <span className="cart-label">{cartCount} ITEMS</span>
-        </motion.button>
+        {/* Right-side actions */}
+        <div className="header-actions">
+          <div className="header-separator desktop-only" />
+          <button className="icon-btn desktop-only" onClick={triggerNotYetAlert}>
+            <span>Account</span>
+            <User size={20} strokeWidth={1.5} />
+          </button>
+          <div className="header-separator desktop-only" />
 
-        <motion.button layout className="mobile-menu-btn" onClick={triggerNotYetAlert}>
-          <Menu size={24} />
-        </motion.button>
-      </div>
+          <button
+            className={`cart-btn ${isSearchOpen ? 'search-active' : ''}`}
+            onClick={triggerNotYetAlert}
+          >
+            <div className="cart-icon-wrapper">
+              <ShoppingBag size={22} strokeWidth={1.5} />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </div>
+          </button>
 
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open navigation menu"
+          >
+            <Menu size={24} />
+          </button>
+        </div>
 
+      </header>
 
-    </header>
+      {/* ── Mobile slide-out drawer ── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="mobile-drawer-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Drawer panel */}
+            <motion.aside
+              className="mobile-drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+            >
+              {/* Top bar */}
+              <div className="mobile-drawer-topbar">
+                <img
+                  src="/soffwareboyz.svg"
+                  alt="Soffware Boyz"
+                  className="drawer-logo"
+                />
+                <button
+                  className="drawer-close-btn"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+
+              {/* Nav links — staggered in */}
+              <nav className="drawer-nav">
+                <ul>
+                  {navLinks.map((link, i) => (
+                    <motion.li
+                      key={link}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
+                    >
+                      <button
+                        className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
+                        onClick={triggerNotYetAlert}
+                      >
+                        {activeLink === link && (
+                          <motion.span
+                            layoutId="drawer-active-bar"
+                            className="drawer-active-bar"
+                          />
+                        )}
+                        {link}
+                      </button>
+                    </motion.li>
+                  ))}
+                </ul>
+              </nav>
+
+              {/* Ad Slideshow */}
+              <div className="drawer-ad-section">
+                <p className="drawer-ad-label">Featured</p>
+                <div className="drawer-ad-track-wrapper">
+                  {AD_SLIDES.map((src, i) => (
+                    <div
+                      key={src}
+                      className={`drawer-ad-slide ${i === adSlide ? 'active' : ''}`}
+                    >
+                      <img src={src} alt={`Featured drop ${i + 1}`} />
+                      {i === adSlide && (
+                        <div
+                          className="drawer-ad-progress"
+                          key={adSlide}
+                          style={{ '--ad-duration': `${AD_DURATION}ms` }}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="drawer-ad-dots">
+                  {AD_SLIDES.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`drawer-ad-dot ${i === adSlide ? 'active' : ''}`}
+                      onClick={() => setAdSlide(i)}
+                      aria-label={`Go to slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer — Account */}
+              <div className="drawer-footer">
+                <button className="drawer-footer-btn" onClick={triggerNotYetAlert}>
+                  <User size={16} strokeWidth={1.5} />
+                  <span>Account</span>
+                </button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

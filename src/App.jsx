@@ -37,8 +37,10 @@ function App() {
   return (
     <InteractionProvider>
       <div className="app-container">
-        <TopBanner />
-        <Header cartCount={cart.length} />
+        <div className="sticky-header-wrapper">
+          <TopBanner />
+          <Header cartCount={cart.length} />
+        </div>
         
         <div className="content-wrapper">
           <main className="main-content">

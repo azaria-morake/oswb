@@ -1,34 +1,63 @@
+/* ═══════════════════════════════════════════════
+   HEADER — base layout
+   Logo | Nav | Search | Account | Cart | Burger
+═══════════════════════════════════════════════ */
+
 .main-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
+  height: 64px;
+  /* fixed height — prevents any y-axis shift */
+  padding: 0 40px;
   background-color: var(--bg-light);
-  position: sticky;
-  top: 36px; /* Below top banner */
-  z-index: 100;
+  position: relative;
+  z-index: 1;
   border-bottom: 1px solid var(--border-light);
+  gap: 0;
+  overflow: hidden;
 }
 
-.header-left {
+/* ── Spacer — pushes nav + search flush to the right ── */
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+/* ── Logo ── */
+.header-logo {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 40px;
+  overflow: hidden;
+  transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 200px;
+}
+
+.logo-img {
+  height: 52px;
+  display: block;
   flex-shrink: 0;
 }
 
-.logo-container {
+/* —— Desktop Nav — natural width, moves left as search expands —— */
+.desktop-nav {
+  flex: 0 0 auto;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  color: var(--text-dark);
+  padding-left: 0;
+  padding-right: 16px;
+  transition: opacity 0.4s ease;
 }
 
 .desktop-nav ul {
   display: flex;
   align-items: center;
   gap: 12px;
+  white-space: nowrap;
+}
+
+.desktop-nav.search-active {
+  opacity: 0.4;
 }
 
 .nav-divider {
@@ -58,11 +87,103 @@
   background-color: var(--accent-orange);
 }
 
-.header-right {
+/* ── Search Wrapper ── */
+.search-wrapper {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  overflow: hidden;
+  /* width transitions drive the expansion */
+  width: 100px;
+  /* closed: fits "Search" trigger */
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 16px;
+}
+
+.search-wrapper.active {
+  width: 320px;
+  /* desktop: expands left into nav space */
+}
+
+/* ── Search trigger button ── */
+.search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 4px;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.search-trigger:hover {
+  color: var(--accent-orange);
+}
+
+/* ── Open search box ── */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 4px;
+  padding: 0 12px;
+  gap: 10px;
+  color: var(--text-main);
+  height: 36px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.search-icon-active {
+  color: var(--accent-orange);
+  flex-shrink: 0;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted-dark);
+}
+
+.search-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.search-close-btn:hover {
+  color: var(--text-main);
+}
+
+/* ── Right-side actions — never move on desktop ── */
+.header-actions {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0;
-  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -73,20 +194,32 @@
   font-size: 0.9rem;
   font-weight: 400;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .icon-btn:hover {
   color: var(--accent-orange);
 }
 
+.header-separator {
+  width: 1px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+  margin: 0 16px;
+}
+
 .cart-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
   color: var(--text-dark);
   font-weight: 500;
   font-size: 0.9rem;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease;
+}
+
+.cart-btn:hover {
+  color: var(--accent-orange);
 }
 
 .cart-icon-wrapper {
@@ -113,151 +246,370 @@
   line-height: 1;
 }
 
-.cart-btn:hover {
-  color: var(--accent-orange);
-}
-
 .mobile-menu-btn {
   display: none;
   color: var(--text-dark);
 }
 
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-  margin-left: 20px;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.search-wrapper.active {
-  justify-content: center;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-dark);
-  border: 1px solid var(--border-dark);
-  border-radius: 4px;
-  padding: 4px 12px;
-  gap: 10px;
-  color: var(--text-main);
-  height: 36px;
-  width: 280px;
-  max-width: 100%;
-}
-
-.search-wrapper.active .search-box {
-  width: 100%;
-  max-width: 600px;
-}
-
-.search-icon-active {
-  color: var(--accent-orange);
-  flex-shrink: 0;
-}
-
-.search-input {
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  outline: none;
-  width: 100%;
-}
-
-.search-input::placeholder {
-  color: var(--text-muted-dark);
-}
-
-.search-close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted-dark);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: color 0.3s ease;
-  flex-shrink: 0;
-}
-
-.search-close-btn:hover {
-  color: var(--text-main);
-}
-
-.header-separator {
-  width: 1px;
-  height: 20px;
-  background-color: rgba(0, 0, 0, 0.15);
-  margin: 0 16px;
+/* ══════════════════════════════════════
+   MOBILE DRAWER — base (hidden on desktop)
+══════════════════════════════════════ */
+.mobile-drawer-backdrop,
+.mobile-drawer {
+  display: none;
 }
 
 .desktop-only {
   display: flex;
 }
 
+/* ══════════════════════════════════════
+   RESPONSIVE — large desktop
+══════════════════════════════════════ */
 @media (max-width: 1200px) {
-  .search-box {
-    width: 200px;
+  .search-wrapper.active {
+    width: 260px;
   }
 }
 
+/* ══════════════════════════════════════
+   RESPONSIVE — mobile (≤ 900px)
+   Layout: Logo | Search | Cart | Burger
+══════════════════════════════════════ */
 @media (max-width: 900px) {
-  .desktop-nav, .desktop-only {
+  .main-header {
+    padding: 0 16px;
+    overflow: visible;
+  }
+
+  /* Hide ONLY desktop nav/items — spacer stays visible on mobile */
+  .desktop-nav,
+  .desktop-only {
     display: none !important;
   }
-  
-  .main-header {
-    padding: 15px 20px;
-    position: relative;
-    overflow: hidden;
-  }
 
-  .header-left, .header-right {
-    transition: all 0.5s ease;
-    flex-shrink: 1;
-    min-width: 0;
-  }
-
-  .main-header:has(.search-wrapper.active) .header-left,
-  .main-header:has(.search-wrapper.active) .header-right {
-    flex-basis: 50px; /* Push them aside but don't hide */
-    overflow: hidden;
-  }
-
-  .search-wrapper {
-    margin-left: 10px;
-    flex: 0 0 auto;
-    justify-content: center;
-  }
-
-  .search-wrapper.active {
-    flex: 1;
-    margin: 0 10px;
-  }
-
-  .search-box {
-    width: 100%;
-  }
-
-  .icon-btn span, .cart-label {
+  /* Spacer: absorbs dead space between logo and search on mobile.
+     Collapses instantly when search opens so search fills the row. */
+  .main-header:has(.search-wrapper.active) .header-spacer {
     display: none;
   }
 
-  .mobile-menu-btn {
-    display: block;
-    margin-left: 10px;
+  /* ── Logo — natural size, pushes nothing; spacer fills the gap ── */
+  .header-logo {
+    flex: 0 0 auto;
+    max-width: 200px;
+    transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.4s ease;
   }
 
-  .header-separator {
-    margin: 0 8px;
+  .header-logo.search-active {
+    max-width: 0;
+    /* collapse completely — no clipping overlay */
+    opacity: 0;
+  }
+
+  /* ── Search — fixed width, anchored right of logo; expands when open ── */
+  .search-wrapper {
+    flex: 0 0 auto;
+    /* don't grow — stay pinned next to cart */
+    width: 100px;
+    margin-left: 16px;
+    justify-content: flex-end;
+  }
+
+  .search-wrapper.active {
+    flex: 1 1 auto;
+    /* expand to fill vacated logo space */
+    width: auto;
+    justify-content: center;
+  }
+
+  /* ── Mobile actions ── */
+  .header-actions {
+    gap: 20px;
+  }
+
+  /* Search wrapper — match the 12px gap cart↔burger so search↔cart is even */
+  .search-wrapper {
+    margin-left: 0;
+    margin-right: 12px;
+  }
+
+  /* Cart — stays in place, just fades when search opens */
+  .cart-btn {
+    margin-right: 0;
+    transition: opacity 0.4s ease, color 0.3s ease;
+  }
+
+  .cart-btn.search-active {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Burger — always visible, no bg overlay needed */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    color: var(--text-dark);
+  }
+}
+
+/* ══════════════════════════════════════
+   MOBILE DRAWER — active styles (mobile only)
+══════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Backdrop */
+  .mobile-drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 300;
+  }
+
+  /* Drawer panel */
+  .mobile-drawer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    max-width: 88vw;
+    height: 100dvh;
+    background: var(--bg-dark);
+    border-left: 1px solid var(--border-dark);
+    z-index: 301;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Geometric accent — faint rotated square for techwear texture */
+  .mobile-drawer::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(255, 90, 0, 0.07);
+    transform: rotate(30deg);
+    pointer-events: none;
+  }
+
+  /* Top bar — logo + close */
+  .mobile-drawer-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 64px;
+    border-bottom: 1px solid var(--border-dark);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Logo on dark bg — make it white */
+  .drawer-logo {
+    height: 32px;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+
+  .drawer-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 3px;
+    color: var(--text-muted-dark);
+    transition: color 0.25s ease, background 0.25s ease;
+  }
+
+  .drawer-close-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Nav section */
+  .drawer-nav {
+    flex: 0 0 auto;
+    /* natural height only — ad section fills the rest */
+    padding: 12px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .drawer-nav ul {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 20px 28px;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: var(--font-wide);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: left;
+    border-bottom: 1px solid var(--border-dark);
+    transition: color 0.25s ease,
+      padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .drawer-nav-link:hover {
+    color: var(--text-main);
+    padding-left: 36px;
+  }
+
+  .drawer-nav-link.active {
+    color: var(--text-main);
+    padding-left: 36px;
+  }
+
+  /* Orange left-edge bar for the active item */
+  .drawer-active-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-orange);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Footer */
+  .drawer-footer {
+    padding: 24px 28px;
+    border-top: 1px solid var(--border-dark);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .drawer-footer-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.25s ease;
+  }
+
+  .drawer-footer-btn:hover {
+    color: var(--text-main);
+  }
+
+  /* ── Drawer Ad Slideshow ── */
+  .drawer-ad-section {
+    flex: 1 1 0;
+    /* grow to fill space between last nav item and footer */
+    min-height: 0;
+    /* required for flex children to shrink correctly */
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .drawer-ad-label {
+    font-family: var(--font-wide);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  .drawer-ad-track-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1 1 0;
+    /* fill remaining vertical space in the section */
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-dark);
+    /* Techwear corner clip */
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  }
+
+  .drawer-ad-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .drawer-ad-slide.active {
+    opacity: 1;
+  }
+
+  .drawer-ad-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Orange progress bar at bottom of the image */
+  .drawer-ad-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent-orange);
+    animation: drawer-ad-tick var(--ad-duration, 3s) linear forwards;
+  }
+
+  @keyframes drawer-ad-tick {
+    from {
+      width: 0%;
+    }
+
+    to {
+      width: 100%;
+    }
+  }
+
+  /* Dot indicators */
+  .drawer-ad-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .drawer-ad-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    transition: background 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .drawer-ad-dot.active {
+    background: var(--accent-orange);
+    transform: scale(1.4);
   }
 }

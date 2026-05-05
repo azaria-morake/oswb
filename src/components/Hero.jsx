@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './Hero.css';
 
 const heroSlides = [
-  '/assets/hero_slide/hero.png',
-  '/assets/hero_slide/hero_slide1.png',
-  '/assets/hero_slide/hero_slide2.png',
-  '/assets/hero_slide/hero_slide3.png',
-  '/assets/hero_slide/hero_slide4.png',
-  '/assets/hero_slide/hero_slide5.png',
-  '/assets/hero_slide/hero_slide6.png',
+  '/assets/hero_slide/hero.jpg',
+  '/assets/hero_slide/hero_slide1.jpg',
+  '/assets/hero_slide/hero_slide2.jpg',
+  '/assets/hero_slide/hero_slide3.jpg',
+  '/assets/hero_slide/hero_slide4.jpg',
+  '/assets/hero_slide/hero_slide5.jpg',
+  '/assets/hero_slide/hero_slide6.jpg',
 ];
 
 const Hero = () => {
@@ -29,10 +29,10 @@ const Hero = () => {
         <div className="hero-bg"></div>
         <div className="hero-image-container">
           <AnimatePresence initial={false}>
-            <motion.img 
+            <motion.img
               key={heroSlides[currentSlide]}
-              src={heroSlides[currentSlide]} 
-              alt={`Slide ${currentSlide + 1}`} 
+              src={heroSlides[currentSlide]}
+              alt={`Slide ${currentSlide + 1}`}
               className="hero-image"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -42,13 +42,13 @@ const Hero = () => {
           </AnimatePresence>
         </div>
 
-        
+
         <div className="hero-text-overlay">
           <div className="hero-title-container">
             <h1>SOFFWARE</h1>
             <h1>BOYZ <span className="highlight-line">|</span> DROP 001</h1>
           </div>
-          
+
           <div className="btn-orange-wrapper hero-btn-wrapper">
             <div className="btn-orange-inner">
               <button className="btn-orange hero-btn">
