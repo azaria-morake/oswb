@@ -1,0 +1,36 @@
+.tech-ticker {
+  background-color: var(--bg-dark);
+  border-top: 1px solid rgba(255, 90, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 90, 0, 0.2);
+  padding: 15px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.tech-ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: tech-scroll 30s linear infinite;
+}
+
+.tech-ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-wide);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0 40px;
+  text-transform: uppercase;
+}
+
+.tech-ticker-item span {
+  color: var(--accent-orange);
+}
+
+@keyframes tech-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

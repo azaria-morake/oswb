@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { InteractionProvider } from './InteractionContext';
 import TopBanner from './components/TopBanner';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import FeaturedCollectibles from './components/FeaturedCollectibles';
-import DigitalFittingRoom from './components/DigitalFittingRoom';
+import Home from './pages/Home';
+import Drops from './pages/Drops';
 import CartSidebar from './components/CartSidebar';
 import Footer from './components/Footer';
 import ProductModal from './components/ProductModal';
+import CartManagerModal from './components/CartManagerModal';
 import GlobalAlert from './components/GlobalAlert';
+
+import { useCart } from './CartContext';
 
 function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cart, setCart] = useState([
-    { cartId: 1, id: 1, name: 'Silicon Melt Hoodie', price: '$18.80', image: '/assets/hoodie2.png' },
-    { cartId: 2, id: 2, name: 'Silicon Melt Hoodie', price: '$78.00', image: '/assets/hoodie1.png' },
-    { cartId: 3, id: 3, name: 'Refined Stock', price: '$15.80', image: '/assets/can.png' },
-  ]);
+  const { cart, cartCount, addToCart, removeFromCart, isCartOpen, closeCart } = useCart();
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -26,48 +25,50 @@ function App() {
     setSelectedProduct(null);
   };
 
-  const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, { ...product, cartId: Date.now() }]);
-  };
-
-  const removeFromCart = (cartId) => {
-    setCart((prevCart) => prevCart.filter(item => item.cartId !== cartId));
-  };
-
   return (
     <InteractionProvider>
-      <div className="app-container">
-        <div className="sticky-header-wrapper">
-          <TopBanner />
-          <Header cartCount={cart.length} />
-        </div>
-        
-        <div className="content-wrapper">
-          <main className="main-content">
-            <Hero />
-            <div className="main-grid-container">
-              <FeaturedCollectibles onProductClick={handleProductClick} />
-              <DigitalFittingRoom />
-            </div>
-          </main>
+      <Router>
+        <div className="app-container">
+          <div className="sticky-header-wrapper">
+            <TopBanner />
+            <Header cartCount={cartCount} />
+          </div>
           
-          <CartSidebar cart={cart} onRemove={removeFromCart} />
-        </div>
-        
-        <Footer />
-        
-        <ProductModal 
-          isOpen={!!selectedProduct} 
-          onClose={closeProductModal} 
-          product={selectedProduct}
-          onAddToCart={addToCart}
-        />
+          <div className="content-wrapper">
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home onProductClick={handleProductClick} />} />
+                <Route 
+                  path="/drops" 
+                  element={
+                    <Drops 
+                      onProductClick={handleProductClick} 
+                      onQuickAdd={addToCart} 
+                    />
+                  } 
+                />
+              </Routes>
+            </main>
+            
+            <CartSidebar />
+          </div>
+          
+          <Footer />
+          
+          <ProductModal 
+            isOpen={!!selectedProduct} 
+            onClose={closeProductModal} 
+            product={selectedProduct}
+            onAddToCart={addToCart}
+          />
 
-        <GlobalAlert />
-      </div>
+          <CartManagerModal />
+
+          <GlobalAlert />
+        </div>
+      </Router>
     </InteractionProvider>
   );
 }
-
 
 export default App;

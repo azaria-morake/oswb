@@ -322,11 +322,17 @@
     /* expand to fill vacated logo space */
     width: auto;
     justify-content: center;
+    margin-right: 16px;
   }
 
   /* ── Mobile actions ── */
   .header-actions {
     gap: 20px;
+    transition: gap 0.4s ease;
+  }
+
+  .main-header:has(.search-wrapper.active) .header-actions {
+    gap: 0px;
   }
 
   /* Search wrapper — match the 12px gap cart↔burger so search↔cart is even */
@@ -338,12 +344,15 @@
   /* Cart — stays in place, just fades when search opens */
   .cart-btn {
     margin-right: 0;
-    transition: opacity 0.4s ease, color 0.3s ease;
+    max-width: 60px;
+    overflow: visible;
+    transition: opacity 0.4s ease, color 0.3s ease, max-width 0.4s ease;
   }
 
   .cart-btn.search-active {
     opacity: 0;
     pointer-events: none;
+    max-width: 0;
   }
 
   /* Burger — always visible, no bg overlay needed */

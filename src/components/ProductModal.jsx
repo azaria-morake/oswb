@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize, CheckCircle } from 'lucide-react';
 import './ProductModal.css';
 
 const ProductModal = ({ isOpen, onClose, product, onAddToCart }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   // Simulated multiple images for the carousel
   const images = product ? [
@@ -38,7 +50,8 @@ const ProductModal = ({ isOpen, onClose, product, onAddToCart }) => {
 
   const handleAddToCart = () => {
     onAddToCart(product);
-    onClose();
+    setShowSnackbar(true);
+    setTimeout(() => setShowSnackbar(false), 3000);
   };
 
   return (
@@ -145,6 +158,19 @@ const ProductModal = ({ isOpen, onClose, product, onAddToCart }) => {
                 </div>
               </div>
 
+              <AnimatePresence>
+                {showSnackbar && (
+                  <motion.div 
+                    className="modal-snackbar"
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 50, opacity: 0 }}
+                  >
+                    <CheckCircle size={16} />
+                    <span>ITEM_ADDED_TO_SYSTEM</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </motion.div>

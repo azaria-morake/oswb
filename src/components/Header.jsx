@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useInteraction } from '../InteractionContext';
+import { useCart } from '../CartContext';
 import { Search, User, Menu, ShoppingBag, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Header.css';
 
-const Header = ({ onCartToggle, cartCount }) => {
+const Header = ({ cartCount }) => {
   const { triggerNotYetAlert } = useInteraction();
+  const { openCartManager } = useCart();
   const [hoveredLink, setHoveredLink] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [adSlide, setAdSlide] = useState(0);
   const searchInputRef = useRef(null);
   const searchWrapperRef = useRef(null);
-  const activeLink = 'Home';
+  const location = useLocation();
+  const activeLink = location.pathname === '/drops' ? 'Drops' : location.pathname === '/' ? 'Home' : '';
 
   const navLinks = ['Home', 'Drops', 'Accessories', 'Collectibles'];
 
@@ -89,9 +93,15 @@ const Header = ({ onCartToggle, cartCount }) => {
             {navLinks.map((link, index) => (
               <React.Fragment key={link}>
                 <li onMouseEnter={() => setHoveredLink(link)} className="nav-item-container">
-                  <button className="disabled-link nav-btn" onClick={triggerNotYetAlert}>
-                    {link}
-                  </button>
+                  {link === 'Home' || link === 'Drops' ? (
+                    <Link to={link === 'Home' ? '/' : '/drops'} className="nav-btn">
+                      {link}
+                    </Link>
+                  ) : (
+                    <button className="disabled-link nav-btn" onClick={triggerNotYetAlert}>
+                      {link}
+                    </button>
+                  )}
                   {((hoveredLink === link) || (!hoveredLink && activeLink === link)) && (
                     <motion.div
                       layoutId="nav-underline"
@@ -158,7 +168,7 @@ const Header = ({ onCartToggle, cartCount }) => {
 
           <button
             className={`cart-btn ${isSearchOpen ? 'search-active' : ''}`}
-            onClick={triggerNotYetAlert}
+            onClick={openCartManager}
           >
             <div className="cart-icon-wrapper">
               <ShoppingBag size={22} strokeWidth={1.5} />
@@ -225,18 +235,34 @@ const Header = ({ onCartToggle, cartCount }) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
                     >
-                      <button
-                        className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
-                        onClick={triggerNotYetAlert}
-                      >
-                        {activeLink === link && (
-                          <motion.span
-                            layoutId="drawer-active-bar"
-                            className="drawer-active-bar"
-                          />
-                        )}
-                        {link}
-                      </button>
+                      {link === 'Home' || link === 'Drops' ? (
+                        <Link
+                          to={link === 'Home' ? '/' : '/drops'}
+                          className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {activeLink === link && (
+                            <motion.span
+                              layoutId="drawer-active-bar"
+                              className="drawer-active-bar"
+                            />
+                          )}
+                          {link}
+                        </Link>
+                      ) : (
+                        <button
+                          className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
+                          onClick={triggerNotYetAlert}
+                        >
+                          {activeLink === link && (
+                            <motion.span
+                              layoutId="drawer-active-bar"
+                              className="drawer-active-bar"
+                            />
+                          )}
+                          {link}
+                        </button>
+                      )}
                     </motion.li>
                   ))}
                 </ul>

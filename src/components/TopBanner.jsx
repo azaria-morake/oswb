@@ -1,19 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import './TopBanner.css';
 
 const TopBanner = () => {
+  const [timeLeft, setTimeLeft] = useState({
+    hours: 0,
+    minutes: 22,
+    seconds: 15
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        let { hours, minutes, seconds } = prev;
+        if (seconds > 0) {
+          seconds--;
+        } else if (minutes > 0) {
+          minutes--;
+          seconds = 59;
+        } else if (hours > 0) {
+          hours--;
+          minutes = 59;
+          seconds = 59;
+        } else {
+          clearInterval(timer);
+        }
+        return { hours, minutes, seconds };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatNumber = (num) => num.toString().padStart(2, '0');
+
   return (
-    <div style={{
-      backgroundColor: '#111111',
-      color: 'var(--text-muted-dark)',
-      textAlign: 'center',
-      padding: '10px 20px',
-      fontSize: '0.75rem',
-      fontWeight: '700',
-      letterSpacing: '1px',
-      fontFamily: 'var(--font-hero)',
-      textTransform: 'uppercase'
-    }}>
-      DROP 001: PROCESSED FOR THE STREETS – <span style={{ color: 'var(--accent-orange)' }}>00:22:15</span>
+    <div className="top-banner">
+      <div className="ticker-container">
+        <div className="ticker-content">
+          <span className="ticker-item">PROCESSING_SYSTEM_INIT...</span>
+          <span className="ticker-item">ACCESS_GRANTED_SECURE_CONNECTION</span>
+          <span className="ticker-item">UPDATING_MANIFEST_DROPS_LIVE</span>
+          <span className="ticker-item">PROCESSING_SYSTEM_INIT...</span>
+          <span className="ticker-item">ACCESS_GRANTED_SECURE_CONNECTION</span>
+          <span className="ticker-item">UPDATING_MANIFEST_DROPS_LIVE</span>
+        </div>
+      </div>
+      
+      <div className="timer-container">
+        <span className="timer-label">EST_RELEASE:</span>
+        <div className="timer-clock">
+          {formatNumber(timeLeft.hours)}:{formatNumber(timeLeft.minutes)}:{formatNumber(timeLeft.seconds)}
+        </div>
+      </div>
     </div>
   );
 };

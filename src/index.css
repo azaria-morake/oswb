@@ -137,6 +137,7 @@ button {
   background-color: var(--bg-dark);
   color: var(--text-main);
   flex: 1;
+  min-width: 0;
 }
 
 .main-grid-container {

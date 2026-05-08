@@ -1,0 +1,223 @@
+.drop-grid-section {
+  padding: 80px 40px;
+  background-color: var(--bg-dark);
+}
+
+.drop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.drop-card {
+  position: relative;
+  background-color: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* L-Brackets */
+.drop-card::before, .drop-card::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent-orange);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Top-left bracket */
+.drop-card::before {
+  top: -5px;
+  left: -5px;
+  border-right: none;
+  border-bottom: none;
+}
+
+/* Bottom-right bracket */
+.drop-card::after {
+  bottom: -5px;
+  right: -5px;
+  border-left: none;
+  border-top: none;
+}
+
+.drop-img-wrapper {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  position: relative;
+  background-color: #1a1a1a;
+}
+
+.drop-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease, filter 0.4s ease;
+}
+
+.upcoming .drop-img-wrapper img {
+  filter: blur(20px) grayscale(1);
+}
+
+.confidential-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.confidential-text {
+  font-family: var(--font-wide);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  transform: rotate(-15deg);
+  border: 2px solid #fff;
+  padding: 10px 20px;
+}
+
+.status-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: var(--font-wide);
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 4px 8px;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  z-index: 2;
+}
+
+.status-badge.in-stock {
+  color: #00ff00;
+}
+
+.status-badge.depleted {
+  color: var(--accent-orange);
+}
+
+.pips-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 4px;
+  z-index: 2;
+}
+
+.pip {
+  width: 8px;
+  height: 2px;
+  background-color: rgba(255, 90, 0, 0.3);
+}
+
+.pip.active {
+  background-color: var(--accent-orange);
+}
+
+.drop-info {
+  padding: 20px;
+}
+
+.drop-info h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.drop-info .price {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hover Effects */
+.drop-card:hover .drop-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.tech-spec-overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-family: var(--font-wide);
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.drop-card:hover .tech-spec-overlay {
+  opacity: 1;
+}
+
+.quick-add-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  background-color: var(--accent-orange);
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+.drop-card:hover .quick-add-btn {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.quick-add-btn:hover {
+  background-color: #fff;
+  transform: scale(1.1);
+}
+
+/* Scanline animation for upcoming */
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-orange);
+  opacity: 0.5;
+  box-shadow: 0 0 10px var(--accent-orange);
+  animation: scan 3s linear infinite;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+@media (max-width: 900px) {
+  .drop-grid-section {
+    padding: 40px 16px;
+  }
+  .drop-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
