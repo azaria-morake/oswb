@@ -1,0 +1,451 @@
+.admin-console {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #0A0A0A;
+  color: #E0E0E0;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 250px;
+  border-right: 1px solid #1F1F1F;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #050505;
+}
+
+.admin-brand {
+  margin-bottom: 40px;
+}
+
+.admin-brand h1 {
+  color: #FF5C00;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin: 0 0 5px 0;
+}
+
+.admin-status {
+  font-size: 0.7rem;
+  color: #4CAF50;
+  letter-spacing: 1px;
+}
+
+.admin-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 10px;
+  color: #888;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: #FF5C00;
+  border: 1px solid #1F1F1F;
+  background-color: rgba(255, 92, 0, 0.05);
+}
+
+.nav-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.nav-item.disabled:hover {
+  color: #888;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.admin-user {
+  margin-top: auto;
+  border-top: 1px solid #1F1F1F;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-role {
+  color: #FF5C00;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.user-id {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid #1F1F1F;
+  color: #888;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  color: #FF5C00;
+  border-color: #FF5C00;
+}
+
+/* Workspace */
+.admin-workspace {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.workspace-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #1F1F1F;
+  padding-bottom: 20px;
+}
+
+.workspace-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #FFF;
+}
+
+/* System Console */
+.system-console-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  height: 150px;
+  background-color: rgba(10, 10, 10, 0.95);
+  border: 1px solid #1F1F1F;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.console-header {
+  background-color: #1F1F1F;
+  padding: 5px 10px;
+  font-size: 0.7rem;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.console-feed {
+  padding: 10px;
+  font-size: 0.75rem;
+  color: #555;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.console-feed p {
+  margin: 0 0 5px 0;
+}
+
+/* Form Elements */
+.admin-form-group {
+  margin-bottom: 20px;
+}
+
+.admin-form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.admin-input {
+  width: 100%;
+  background-color: #050505;
+  border: 1px solid #1F1F1F;
+  color: #FFF;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+select.admin-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  padding-right: 35px;
+}
+
+.admin-input:focus {
+  border-color: #FF5C00;
+}
+
+.admin-btn {
+  background-color: #FF5C00;
+  color: #0A0A0A;
+  border: none;
+  padding: 12px 24px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+}
+
+.admin-btn:hover {
+  background-color: #FFF;
+}
+
+/* Data Tables */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 15px;
+  border-bottom: 1px solid #1F1F1F;
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.admin-table td {
+  padding: 15px;
+  border-bottom: 1px solid #111;
+  font-size: 0.85rem;
+}
+
+.admin-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.pip {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.pip.green { background-color: #4CAF50; }
+.pip.orange { background-color: #FF9800; }
+.pip.red { background-color: #F44336; }
+
+/* Admin Snackbar */
+.admin-snackbar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #050505;
+  border: 1px solid #1F1F1F;
+  color: #FFF;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 3000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+  animation: slideIn 0.3s ease forwards;
+}
+
+.admin-snackbar.success {
+  border-left: 3px solid #4CAF50;
+}
+
+.admin-snackbar.error {
+  border-left: 3px solid #F44336;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Action Buttons */
+.action-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  color: #FF5C00;
+}
+
+.action-btn.delete:hover {
+  color: #F44336;
+}
+
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #050505;
+  border: 1px solid #1F1F1F;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group label {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+/* Body Scroll Lock class for modals */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Mobile Header */
+.admin-mobile-header {
+  display: none;
+  background-color: #050505;
+  border-bottom: 1px solid #1F1F1F;
+  padding: 15px 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-brand-mobile h1 {
+  color: #FF5C00;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  color: #FFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .admin-console {
+    flex-direction: column;
+  }
+  
+  .admin-mobile-header {
+    display: flex;
+  }
+  
+  .admin-sidebar {
+    position: fixed;
+    top: 61px; /* height of header approx */
+    left: -100%;
+    height: calc(100vh - 61px);
+    width: 250px;
+    z-index: 2000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+  }
+  
+  .admin-sidebar.open {
+    left: 0;
+  }
+  
+  .admin-brand {
+    display: none; /* Hide desktop brand in sidebar on mobile */
+  }
+  
+  .admin-workspace {
+    padding: 15px;
+  }
+  
+  .vault-table-container, .drop-table-container, .admin-table-container {
+    overflow-x: auto;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #1F1F1F; /* Optional: adds a visual border to indicate scrollable area */
+  }
+  
+  .admin-table {
+    min-width: 600px; /* Forces table to be wider than screen, enabling internal scroll */
+  }
+  
+  .system-console-overlay {
+    width: 90%;
+    left: 5%;
+    right: 5%;
+    bottom: 10px;
+  }
+  
+  /* Modals */
+  .admin-modal-content {
+    width: 95% !important;
+    max-width: 600px;
+    padding: 20px !important;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .workspace-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+  
+  .workspace-header > div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Form grids */
+  form > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Homepage Manager grid */
+  div[style*="grid-template-columns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+

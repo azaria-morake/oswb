@@ -1,28 +1,45 @@
 .drop-grid-section {
   padding: 80px 40px;
   background-color: var(--bg-dark);
+  /* Critical: contain overflow to prevent horizontal page scroll */
+  overflow: hidden;
+}
+
+/* ── Wrapper holds the grid + nav buttons ── */
+.drop-grid-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .drop-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
+  flex: 1;
+}
+
+/* ── Swipe nav buttons — hidden on desktop ── */
+.grid-swipe-btn {
+  display: none;
 }
 
 .drop-card {
   position: relative;
   background-color: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Push border inward so brackets don't escape the parent overflow */
+  margin: 6px;
 }
 
-/* L-Brackets */
-.drop-card::before, .drop-card::after {
+/* L-Brackets — contained within card bounds */
+.drop-card::before,
+.drop-card::after {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border: 2px solid var(--accent-orange);
   pointer-events: none;
   z-index: 2;
@@ -30,16 +47,16 @@
 
 /* Top-left bracket */
 .drop-card::before {
-  top: -5px;
-  left: -5px;
+  top: 4px;
+  left: 4px;
   border-right: none;
   border-bottom: none;
 }
 
 /* Bottom-right bracket */
 .drop-card::after {
-  bottom: -5px;
-  right: -5px;
+  bottom: 4px;
+  right: 4px;
   border-left: none;
   border-top: none;
 }
@@ -134,6 +151,8 @@
   margin-bottom: 5px;
   text-transform: uppercase;
   color: var(--text-main);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .drop-info .price {
@@ -212,12 +231,34 @@
   100% { top: 100%; }
 }
 
+/* ═══════════════════════════════════════════════
+   MOBILE — 2 Column Grid
+═══════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .drop-grid-section {
-    padding: 40px 16px;
+    padding: 40px 20px;
+    overflow: hidden;
   }
+
+  .drop-grid-wrapper {
+    align-items: stretch;
+  }
+
   .drop-grid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 16px;
+    padding: 6px;
+    max-width: 380px; /* Reduce size of items */
+    margin: 0 auto; /* Center the grid on the screen */
+  }
+
+  .drop-card {
+    margin: 0; 
+  }
+
+  .quick-add-btn {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

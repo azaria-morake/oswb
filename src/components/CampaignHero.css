@@ -3,6 +3,7 @@
   height: calc(100vh - 104px); /* 40px top banner + 64px header */
   background-color: var(--bg-dark);
   overflow: hidden;
+  margin: 0;
 }
 
 .campaign-hero-visual {
@@ -121,16 +122,22 @@
   .campaign-hero {
     flex-direction: column;
     height: auto;
+    margin: 0;
   }
   .campaign-hero-visual {
     flex: 0 0 auto;
-    height: 50vh;
+    height: 55vw;
+    min-height: 260px;
   }
   .campaign-hero-content {
     flex: 0 0 auto;
-    padding: 40px 20px;
+    padding: 30px 20px 40px;
   }
   .drop-label {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+  .manifest-table td {
+    padding: 10px 0;
+    font-size: 0.65rem;
   }
 }

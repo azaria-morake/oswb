@@ -1,44 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { getActiveProducts } from '../firebase/api';
+import { listenToHomepageConfig, listenToAllProducts } from '../firebase/api';
 import { useCart } from '../CartContext';
 import './FeaturedCollectibles.css';
 
-const mockItems = [
-  { id: 1, name: 'Silicon Melt Hoodie', price: '$18.80', image: '/assets/hoodie1.png', limited: 'LIMITED EDITION: 4 LEFT' },
-  { id: 2, name: 'Silicon Melt Hoodie', price: '$78.00', image: '/assets/hoodie2.png', limited: 'LIMITED EDITION: 4 LEFT', selected: true },
-  { id: 3, name: 'Refined Stock', price: '$15.80', image: '/assets/can.png' },
-  { id: 4, name: 'Malian & Patche', price: '$13.00', image: '/assets/beanie.png' }
-];
-
 const FeaturedCollectibles = ({ onProductClick }) => {
-  const [items, setItems] = useState(mockItems);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const products = await getActiveProducts();
-        if (products && products.length > 0) {
-          // Map backend price and handle images array
-          const formattedProducts = products.map(p => ({
-            id: p.id,
-            name: p.name,
-            price: `ZAR ${p.price}`,
-            image: p.images && p.images.length > 0 ? p.images[0] : '/assets/hoodie1.png',
-            limited: p.isLimited ? 'LIMITED EDITION' : null,
-            selected: false,
-          }));
-          setItems(formattedProducts);
-        }
-      } catch (error) {
-        console.warn("Using mock data. Firebase fetch failed:", error);
-      } finally {
-        setLoading(false);
+    let currentConfig = null;
+    let currentProducts = [];
+
+    const processItems = () => {
+      if (!currentConfig || currentProducts.length === 0) {
+        setItems([]);
+        if (currentConfig && currentProducts.length === 0) setLoading(false);
+        return;
       }
+
+      const featuredIds = currentConfig.featuredProductIds || [];
+      const configuredItems = featuredIds
+        .filter(id => id !== null)
+        .map(id => currentProducts.find(p => p.id === id))
+        .filter(p => p !== undefined)
+        .map(p => ({
+          id: p.id,
+          name: p.name,
+          price: `ZAR ${p.price.toLocaleString()}`,
+          image: p.images && p.images.length > 0 ? p.images[0] : '/assets/placeholder.png',
+          limited: p.isLimited ? (p.stock > 0 ? `LIMITED EDITION: ${p.stock} LEFT` : 'LIMITED EDITION: SOLD OUT') : null,
+          selected: false,
+          stock: p.stock
+        }));
+
+      setItems(configuredItems);
+      setLoading(false);
     };
 
-    fetchProducts();
+    const unsubConfig = listenToHomepageConfig((config) => {
+      currentConfig = config;
+      processItems();
+    });
+
+    const unsubProducts = listenToAllProducts((products) => {
+      currentProducts = products;
+      processItems();
+    });
+
+    return () => {
+      unsubConfig();
+      unsubProducts();
+    };
   }, []);
 
   const handleQuickAdd = (e, item) => {
@@ -56,7 +69,10 @@ const FeaturedCollectibles = ({ onProductClick }) => {
       </div>
 
       <div className="products-grid">
-        {items.map((item) => (
+        {loading ? (
+          <div className="loading-state" style={{ padding: '40px', color: 'var(--accent-orange)', fontFamily: 'var(--font-wide)' }}>INITIALIZING DATABANKS...</div>
+        ) : items.length > 0 ? (
+          items.map((item) => (
           <div
             key={item.id}
             className={`product-card ${item.selected ? 'selected' : ''}`}
@@ -82,7 +98,9 @@ const FeaturedCollectibles = ({ onProductClick }) => {
 
             <div className="product-info">
               <div className="product-meta">
-                <span className="stock-status">IN STOCK</span>
+                <span className="stock-status" style={{ color: item.stock > 0 ? '#4CAF50' : '#ff3333' }}>
+                  {item.stock > 0 ? 'IN STOCK' : 'DEPLETED'}
+                </span>
               </div>
               <h3>{item.name}</h3>
               <p className="price">{item.price}</p>
@@ -90,10 +108,11 @@ const FeaturedCollectibles = ({ onProductClick }) => {
             </div>
 
           </div>
-        ))}
+        ))
+        ) : (
+          <div className="empty-state" style={{ padding: '40px', color: 'var(--text-muted)' }}>NO CONFIGURED INVENTORY</div>
+        )}
       </div>
-
-
     </section>
   );
 };

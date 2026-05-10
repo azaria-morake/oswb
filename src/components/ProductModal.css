@@ -184,7 +184,7 @@
   padding: 60px 50px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: var(--bg-dark);
   color: var(--text-main);
 }
@@ -244,9 +244,14 @@
   line-height: 1.6;
 }
 
-.modal-add-btn {
+.modal-btn-wrapper {
   margin-top: auto;
+  align-self: flex-start;
+}
+
+.modal-add-btn {
   height: 50px;
+  padding: 0 50px;
   font-family: var(--font-wide);
 }
 
@@ -277,32 +282,63 @@
   .desktop-only {
     display: none !important;
   }
+  .modal-overlay {
+    padding: 10px;
+  }
   .modal-content {
     flex-direction: column;
-    height: 90vh;
+    height: 100%;
+    width: 100%;
+    max-height: 95vh;
+    max-width: 100%;
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
   }
   .modal-body {
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .carousel-container {
-    flex: 1.2;
+    flex: 0 0 40vh; /* Reduced height to fit info without scroll */
     border-right: none;
     border-bottom: 1px solid var(--border-dark);
   }
   .modal-info {
     flex: 1;
-    padding: 30px 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ensure text stays at the top */
+  }
+  .product-meta {
+    margin-bottom: 10px;
   }
   .modal-info h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+  }
+  .modal-info .price {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+  }
+  .modal-desc {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 0.8rem;
+  }
+  .modal-btn-wrapper {
+    margin-top: auto; /* Push the entire wrapper to the very bottom */
+    align-self: flex-start; /* Stop wrapper from stretching horizontally */
   }
   .modal-add-btn {
-    margin-top: 20px;
+    height: 40px;
+    padding: 0 40px;
+    font-size: 0.9rem;
   }
   .modal-snackbar {
-    left: 20px;
-    bottom: 20px;
-    right: 20px;
+    left: 10px;
+    bottom: 10px;
+    right: 10px;
     justify-content: center;
   }
 }

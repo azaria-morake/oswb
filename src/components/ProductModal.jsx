@@ -19,12 +19,10 @@ const ProductModal = ({ isOpen, onClose, product, onAddToCart }) => {
     };
   }, [isOpen]);
 
-  // Simulated multiple images for the carousel
-  const images = product ? [
-    product.image,
-    product.image, // Duplicate for demo
-    product.image  // Duplicate for demo
-  ] : [];
+  // Dynamically load images from product data or fallback to single image
+  const images = product?.images?.length > 0 
+    ? product.images 
+    : (product?.image ? [product.image] : []);
 
   if (!isOpen || !product) return null;
 
@@ -118,19 +116,23 @@ const ProductModal = ({ isOpen, onClose, product, onAddToCart }) => {
                   )}
                 </TransformWrapper>
 
-                <div className="carousel-nav desktop-only">
-                  <button className="carousel-nav-btn prev" onClick={prevImage}><ChevronLeft size={30} /></button>
-                  <button className="carousel-nav-btn next" onClick={nextImage}><ChevronRight size={30} /></button>
-                </div>
+                {images.length > 1 && (
+                  <div className="carousel-nav">
+                    <button className="carousel-nav-btn prev" onClick={prevImage}><ChevronLeft size={30} /></button>
+                    <button className="carousel-nav-btn next" onClick={nextImage}><ChevronRight size={30} /></button>
+                  </div>
+                )}
                 
-                <div className="carousel-indicators">
-                  {images.map((_, idx) => (
-                    <div 
-                      key={idx} 
-                      className={`indicator ${idx === currentIndex ? 'active' : ''}`} 
-                    />
-                  ))}
-                </div>
+                {images.length > 1 && (
+                  <div className="carousel-indicators">
+                    {images.map((_, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`indicator ${idx === currentIndex ? 'active' : ''}`} 
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="modal-info">

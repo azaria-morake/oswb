@@ -10,6 +10,13 @@ import Footer from './components/Footer';
 import ProductModal from './components/ProductModal';
 import CartManagerModal from './components/CartManagerModal';
 import GlobalAlert from './components/GlobalAlert';
+import ConsumerLayout from './layouts/ConsumerLayout';
+import AuthGuard from './components/admin/AuthGuard';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminOverview from './pages/admin/AdminOverview';
+import AdminDropManager from './pages/admin/AdminDropManager';
+import AdminProductVault from './pages/admin/AdminProductVault';
+import AdminHomeManager from './pages/admin/AdminHomeManager';
 
 import { useCart } from './CartContext';
 
@@ -28,44 +35,46 @@ function App() {
   return (
     <InteractionProvider>
       <Router>
-        <div className="app-container">
-          <div className="sticky-header-wrapper">
-            <TopBanner />
-            <Header cartCount={cartCount} />
-          </div>
-          
-          <div className="content-wrapper">
-            <main className="main-content">
-              <Routes>
-                <Route path="/" element={<Home onProductClick={handleProductClick} />} />
-                <Route 
-                  path="/drops" 
-                  element={
-                    <Drops 
-                      onProductClick={handleProductClick} 
-                      onQuickAdd={addToCart} 
-                    />
-                  } 
+          <Routes>
+            {/* Consumer Routes */}
+            <Route 
+              path="/" 
+              element={
+                <ConsumerLayout 
+                  cartCount={cartCount} 
+                  selectedProduct={selectedProduct} 
+                  closeProductModal={closeProductModal} 
+                  addToCart={addToCart} 
                 />
-              </Routes>
-            </main>
-            
-            <CartSidebar />
-          </div>
-          
-          <Footer />
-          
-          <ProductModal 
-            isOpen={!!selectedProduct} 
-            onClose={closeProductModal} 
-            product={selectedProduct}
-            onAddToCart={addToCart}
-          />
+              }
+            >
+              <Route index element={<Home onProductClick={handleProductClick} />} />
+              <Route 
+                path="drops" 
+                element={
+                  <Drops 
+                    onProductClick={handleProductClick} 
+                    onQuickAdd={addToCart} 
+                  />
+                } 
+              />
+            </Route>
 
-          <CartManagerModal />
-
-          <GlobalAlert />
-        </div>
+            {/* Admin Routes */}
+            <Route 
+              path="/admin" 
+              element={
+                <AuthGuard>
+                  <AdminLayout />
+                </AuthGuard>
+              }
+            >
+              <Route index element={<AdminOverview />} />
+              <Route path="home" element={<AdminHomeManager />} />
+              <Route path="drops" element={<AdminDropManager />} />
+              <Route path="vault" element={<AdminProductVault />} />
+            </Route>
+          </Routes>
       </Router>
     </InteractionProvider>
   );

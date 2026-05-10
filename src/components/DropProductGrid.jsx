@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../CartContext';
 import { Plus } from 'lucide-react';
 import './DropProductGrid.css';
 
-const products = [
-  { id: 1, name: 'SILICON_MELT_HOODIE_01', price: 'ZAR 1,880', image: '/assets/hoodie2.png', spec: 'WEIGHT: 400GSM', stock: 8 },
-  { id: 2, name: 'SPIKE_TSHIRT_01', price: 'ZAR 850', image: '/assets/tshirt1.png', spec: 'WEIGHT: 220GSM', stock: 3 },
-  { id: 3, name: 'REFINED_STOCK_CAN', price: 'ZAR 150', image: '/assets/can.png', spec: 'COMP: ALUMINUM', stock: 15 },
-  { id: 4, name: 'MALIAN_PATCHE_BEANIE', price: 'ZAR 450', image: '/assets/beanie.png', spec: 'COMP: ACRYLIC', stock: 0 }
-];
+import { listenToDrops } from '../firebase/api';
 
 const DropProductGrid = ({ status = 'active', onProductClick }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const isUpcoming = status === 'upcoming';
   const { addToCart } = useCart();
 
@@ -21,12 +18,29 @@ const DropProductGrid = ({ status = 'active', onProductClick }) => {
     }
   };
 
+  useEffect(() => {
+    const unsubscribe = listenToDrops((fetchedDrops) => {
+      const filteredDrops = fetchedDrops.filter(d => d.status === status);
+      const formatted = filteredDrops.map(d => ({
+        ...d,
+        price: `ZAR ${d.price.toLocaleString()}`
+      }));
+      setProducts(formatted);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [status]);
+
   return (
     <section className={`drop-grid-section ${status}`}>
       {isUpcoming && <div className="scanline"></div>}
-      
+
       <div className="drop-grid">
-        {products.map((product) => (
+        {loading ? (
+          <div className="loading-state">INITIALIZING DATA...</div>
+        ) : products.length > 0 ? (
+          products.map((product) => (
           <div 
             key={product.id} 
             className="drop-card"
@@ -77,7 +91,10 @@ const DropProductGrid = ({ status = 'active', onProductClick }) => {
               <p className="price">{product.price}</p>
             </div>
           </div>
-        ))}
+        ))
+        ) : (
+          <div className="empty-state">NO {status.toUpperCase()} DROPS FOUND</div>
+        )}
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 .featured-section {
   padding: 0;
+  overflow: hidden;
 }
 
 .featured-header {
@@ -209,6 +210,8 @@
   font-weight: 600;
   margin-bottom: 4px;
   text-transform: uppercase;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .product-info .price {

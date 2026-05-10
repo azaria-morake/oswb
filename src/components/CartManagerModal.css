@@ -116,6 +116,8 @@
   font-weight: 600;
   margin-bottom: 5px;
   text-transform: uppercase;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .item-sku {
@@ -275,6 +277,60 @@
   color: var(--accent-orange);
 }
 
+.clear-confirm-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: rgba(255, 90, 0, 0.05);
+  border: 1px solid var(--accent-orange);
+  padding: 15px;
+  text-align: center;
+}
+
+.clear-confirm-text {
+  font-family: var(--font-wide);
+  font-size: 0.8rem;
+  color: var(--accent-orange);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.clear-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-confirm-clear {
+  flex: 1;
+  background-color: var(--accent-orange);
+  color: var(--text-dark);
+  font-family: var(--font-wide);
+  font-size: 0.8rem;
+  padding: 12px;
+  font-weight: 900;
+  transition: all 0.3s ease;
+}
+
+.btn-confirm-clear:hover {
+  background-color: var(--text-main);
+}
+
+.btn-cancel-clear {
+  flex: 1;
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  font-family: var(--font-wide);
+  font-size: 0.8rem;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel-clear:hover {
+  color: var(--text-main);
+  border-color: var(--text-main);
+}
+
 .manager-empty-state {
   display: flex;
   flex-direction: column;
@@ -297,8 +353,50 @@
   }
   
   .cart-manager-matrix {
+    flex: 1; /* Take up remaining height */
     border-right: none;
     border-bottom: 1px solid var(--border-color);
+  }
+
+  .matrix-items {
+    padding: 15px 10px; /* Reduce horizontal padding to maximize item width */
+  }
+  
+  .cart-manager-console {
+    flex: 0 0 auto; /* Take exact height needed, no scroll */
+    padding: 15px 20px;
+    overflow-y: visible;
+  }
+
+  .console-section {
+    margin-bottom: 10px;
+  }
+
+  .console-title {
+    font-size: 0.65rem;
+    margin-bottom: 5px;
+  }
+
+  .console-row {
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+  }
+
+  .console-row.total {
+    font-size: 1rem;
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+
+  .console-actions {
+    flex-direction: row; /* Side by side */
+    gap: 10px;
+  }
+
+  .btn-checkout, .btn-clear-all {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.8rem;
   }
   
   .matrix-header {
@@ -311,8 +409,6 @@
   }
   
   .item-remove-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+    display: none; /* Hide entirely on mobile to prevent overlay */
   }
 }

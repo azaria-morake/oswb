@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useInteraction } from '../InteractionContext';
 import { useCart } from '../CartContext';
+import { useAuth } from '../AuthContext';
 import { Search, User, Menu, ShoppingBag, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Header.css';
@@ -9,6 +10,7 @@ import './Header.css';
 const Header = ({ cartCount }) => {
   const { triggerNotYetAlert } = useInteraction();
   const { openCartManager } = useCart();
+  const { loginWithGoogle, account, logout } = useAuth();
   const [hoveredLink, setHoveredLink] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -160,8 +162,8 @@ const Header = ({ cartCount }) => {
         {/* Right-side actions */}
         <div className="header-actions">
           <div className="header-separator desktop-only" />
-          <button className="icon-btn desktop-only" onClick={triggerNotYetAlert}>
-            <span>Account</span>
+          <button className="icon-btn desktop-only" onClick={!account ? loginWithGoogle : undefined}>
+            <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
             <User size={20} strokeWidth={1.5} />
           </button>
           <div className="header-separator desktop-only" />
@@ -302,9 +304,9 @@ const Header = ({ cartCount }) => {
 
               {/* Footer — Account */}
               <div className="drawer-footer">
-                <button className="drawer-footer-btn" onClick={triggerNotYetAlert}>
+                <button className="drawer-footer-btn" onClick={!account ? loginWithGoogle : undefined}>
                   <User size={16} strokeWidth={1.5} />
-                  <span>Account</span>
+                  <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
                 </button>
               </div>
             </motion.aside>

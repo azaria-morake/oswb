@@ -1,5 +1,6 @@
 /* Drops Page Styling */
 .drops-page {
-  padding-top: 20px;
-  color: var(--text-dark);
+  padding-top: 0;
+  color: var(--text-main);
+  background-color: var(--bg-dark);
 }

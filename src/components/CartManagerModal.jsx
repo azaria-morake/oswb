@@ -15,6 +15,15 @@ const CartManagerModal = () => {
     cartTotal 
   } = useCart();
 
+  const [showClearConfirm, setShowClearConfirm] = React.useState(false);
+
+  // Reset confirm state when modal closes
+  React.useEffect(() => {
+    if (!isCartManagerOpen) {
+      setShowClearConfirm(false);
+    }
+  }, [isCartManagerOpen]);
+
   React.useEffect(() => {
     if (isCartManagerOpen) {
       document.body.style.overflow = 'hidden';
@@ -137,10 +146,7 @@ const CartManagerModal = () => {
                     <span>SUBTOTAL</span>
                     <span>ZAR {cartTotal.toLocaleString()}</span>
                   </div>
-                  <div className="console-row">
-                    <span>EST. SHIPPING</span>
-                    <span>CALCULATED AT CHECKOUT</span>
-                  </div>
+
                   
                   <div className="console-row total">
                     <span>TOTAL</span>
@@ -148,32 +154,56 @@ const CartManagerModal = () => {
                   </div>
                 </div>
 
-                <div className="console-section">
-                  <h3 className="console-title">AUTHORIZATION_CODE</h3>
-                  <div className="promo-input-group">
-                    <input type="text" className="promo-input" placeholder="ENTER CODE" />
-                    <button className="promo-btn">APPLY</button>
-                  </div>
-                </div>
+
 
                 <div className="console-actions">
-                  <button 
-                    className="btn-checkout" 
-                    onClick={() => alert("Checkout flow initializing...")}
-                    disabled={cart.length === 0}
-                    style={{ opacity: cart.length === 0 ? 0.5 : 1, cursor: cart.length === 0 ? 'not-allowed' : 'pointer' }}
-                  >
-                    SECURE CHECKOUT
-                  </button>
-                  
-                  <button 
-                    className="btn-clear-all" 
-                    onClick={clearCart}
-                    disabled={cart.length === 0}
-                    style={{ opacity: cart.length === 0 ? 0.5 : 1, cursor: cart.length === 0 ? 'not-allowed' : 'pointer' }}
-                  >
-                    CLEAR ALL DATA
-                  </button>
+                  {showClearConfirm ? (
+                    <motion.div 
+                      className="clear-confirm-container"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                    >
+                      <p className="clear-confirm-text">PURGE ALL DATA?</p>
+                      <div className="clear-confirm-actions">
+                        <button 
+                          className="btn-confirm-clear"
+                          onClick={() => {
+                            clearCart();
+                            setShowClearConfirm(false);
+                          }}
+                        >
+                          CONFIRM
+                        </button>
+                        <button 
+                          className="btn-cancel-clear"
+                          onClick={() => setShowClearConfirm(false)}
+                        >
+                          CANCEL
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <>
+                      <button 
+                        className="btn-checkout" 
+                        onClick={() => alert("Checkout flow initializing...")}
+                        disabled={cart.length === 0}
+                        style={{ opacity: cart.length === 0 ? 0.5 : 1, cursor: cart.length === 0 ? 'not-allowed' : 'pointer' }}
+                      >
+                        CHECKOUT
+                      </button>
+                      
+                      <button 
+                        className="btn-clear-all" 
+                        onClick={() => setShowClearConfirm(true)}
+                        disabled={cart.length === 0}
+                        style={{ opacity: cart.length === 0 ? 0.5 : 1, cursor: cart.length === 0 ? 'not-allowed' : 'pointer' }}
+                      >
+                        CLEAR
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 

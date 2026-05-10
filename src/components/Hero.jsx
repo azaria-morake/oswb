@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { listenToHomepageConfig } from '../firebase/api';
 import './Hero.css';
 
-const heroSlides = [
-  '/assets/hero_slide/hero.jpg',
-  '/assets/hero_slide/hero_slide1.jpg',
-  '/assets/hero_slide/hero_slide2.jpg',
-  '/assets/hero_slide/hero_slide3.jpg',
-  '/assets/hero_slide/hero_slide4.jpg',
-  '/assets/hero_slide/hero_slide5.jpg',
-  '/assets/hero_slide/hero_slide6.jpg',
-];
-
 const Hero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroImage, setHeroImage] = useState('/assets/hero_slide/hero.jpg');
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(timer);
+    const unsub = listenToHomepageConfig((config) => {
+      if (config && config.heroImage) {
+        setHeroImage(config.heroImage);
+      }
+    });
+    return () => unsub();
   }, []);
 
   return (
@@ -30,9 +22,9 @@ const Hero = () => {
         <div className="hero-image-container">
           <AnimatePresence initial={false}>
             <motion.img
-              key={heroSlides[currentSlide]}
-              src={heroSlides[currentSlide]}
-              alt={`Slide ${currentSlide + 1}`}
+              key={heroImage}
+              src={heroImage}
+              alt="Hero"
               className="hero-image"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
