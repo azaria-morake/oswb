@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where, doc, getDoc, setDoc, onSnapshot, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./config";
 
 // --- Products ---
@@ -159,6 +159,18 @@ export const uploadAdminAsset = async (file, path) => {
   }
 };
 
+export const deleteAdminAsset = async (fileUrl) => {
+  if (!fileUrl || !fileUrl.includes('firebasestorage.googleapis.com')) return false;
+  try {
+    const storageRef = ref(storage, fileUrl);
+    await deleteObject(storageRef);
+    return true;
+  } catch (error) {
+    console.error("Error deleting asset:", error);
+    return false;
+  }
+};
+
 export const assignProductToDrop = async (product, dropName) => {
   try {
     const dropData = {
@@ -240,6 +252,7 @@ export const createDropContainer = async (name) => {
   try {
     const docRef = await addDoc(collection(db, "drop_containers"), {
       name,
+      status: 'draft', // default status
       createdAt: new Date()
     });
     return docRef.id;
@@ -256,6 +269,17 @@ export const deleteDropContainer = async (containerId) => {
     return true;
   } catch (error) {
     console.error("Error deleting drop container:", error);
+    throw error;
+  }
+};
+
+export const updateDropContainerStatus = async (containerId, status) => {
+  try {
+    const docRef = doc(db, "drop_containers", containerId);
+    await updateDoc(docRef, { status });
+    return true;
+  } catch (error) {
+    console.error("Error updating drop container status:", error);
     throw error;
   }
 };

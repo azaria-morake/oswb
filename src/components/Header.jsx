@@ -18,9 +18,9 @@ const Header = ({ cartCount }) => {
   const searchInputRef = useRef(null);
   const searchWrapperRef = useRef(null);
   const location = useLocation();
-  const activeLink = location.pathname === '/drops' ? 'Drops' : location.pathname === '/' ? 'Home' : '';
+  const activeLink = location.pathname === '/drops' ? 'Drops' : location.pathname === '/toggle' ? 'Toggle' : location.pathname === '/' ? 'Home' : '';
 
-  const navLinks = ['Home', 'Drops', 'Accessories', 'Collectibles'];
+  const navLinks = ['Home', 'Drops', 'Toggle', 'Collectibles'];
 
   // Focus search input when opened
   useEffect(() => {
@@ -95,8 +95,8 @@ const Header = ({ cartCount }) => {
             {navLinks.map((link, index) => (
               <React.Fragment key={link}>
                 <li onMouseEnter={() => setHoveredLink(link)} className="nav-item-container">
-                  {link === 'Home' || link === 'Drops' ? (
-                    <Link to={link === 'Home' ? '/' : '/drops'} className="nav-btn">
+                  {link === 'Home' || link === 'Drops' || link === 'Toggle' ? (
+                    <Link to={link === 'Home' ? '/' : link === 'Drops' ? '/drops' : '/toggle'} className="nav-btn">
                       {link}
                     </Link>
                   ) : (
@@ -237,9 +237,9 @@ const Header = ({ cartCount }) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
                     >
-                      {link === 'Home' || link === 'Drops' ? (
+                      {link === 'Home' || link === 'Drops' || link === 'Toggle' ? (
                         <Link
-                          to={link === 'Home' ? '/' : '/drops'}
+                          to={link === 'Home' ? '/' : link === 'Drops' ? '/drops' : '/toggle'}
                           className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >

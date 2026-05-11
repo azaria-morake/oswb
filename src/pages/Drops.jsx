@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getDrops } from '../firebase/api';
+import { getDropContainers } from '../firebase/api';
 import CampaignHero from '../components/CampaignHero';
 import TechnicalTicker from '../components/TechnicalTicker';
 import DropProductGrid from '../components/DropProductGrid';
@@ -7,16 +7,17 @@ import ProcessLookbook from '../components/ProcessLookbook';
 import './Drops.css';
 
 const Drops = ({ onProductClick }) => {
-  const [dropStatus, setDropStatus] = useState('active'); // Default to active for demo
+  const [activeDrop, setActiveDrop] = useState({ name: null, status: 'active' });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDropStatus = async () => {
       try {
-        const drops = await getDrops();
-        if (drops && drops.length > 0) {
-          // Use the first active or upcoming drop
-          setDropStatus(drops[0].status);
+        const containers = await getDropContainers();
+        // Look for the first container that is either active or upcoming
+        const targetDrop = containers.find(c => c.status === 'active' || c.status === 'upcoming');
+        if (targetDrop) {
+          setActiveDrop({ name: targetDrop.name, status: targetDrop.status });
         }
       } catch (error) {
         console.warn("Using default active status. Firebase fetch failed:", error);
@@ -32,7 +33,7 @@ const Drops = ({ onProductClick }) => {
     <div className="drops-page">
       <CampaignHero />
       <TechnicalTicker />
-      <DropProductGrid status={dropStatus} onProductClick={onProductClick} />
+      <DropProductGrid dropContainer={activeDrop} onProductClick={onProductClick} />
       <ProcessLookbook />
     </div>
   );

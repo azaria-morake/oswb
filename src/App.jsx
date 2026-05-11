@@ -5,6 +5,7 @@ import TopBanner from './components/TopBanner';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Drops from './pages/Drops';
+import ToggleArchive from './pages/ToggleArchive';
 import CartSidebar from './components/CartSidebar';
 import Footer from './components/Footer';
 import ProductModal from './components/ProductModal';
@@ -55,6 +56,14 @@ function App() {
                   <Drops 
                     onProductClick={handleProductClick} 
                     onQuickAdd={addToCart} 
+                  />
+                } 
+              />
+              <Route 
+                path="toggle" 
+                element={
+                  <ToggleArchive 
+                    onProductClick={handleProductClick} 
                   />
                 } 
               />

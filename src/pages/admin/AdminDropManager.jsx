@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { listenToAllProducts, assignProductToDrop } from '../../firebase/api';
+import { listenToAllProducts, assignProductToDrop, listenToDropContainers } from '../../firebase/api';
 import { Plus } from 'lucide-react';
 
 const AdminDropManager = () => {
   const [products, setProducts] = useState([]);
-  const [dropName, setDropName] = useState('Drop_001');
+  const [dropContainers, setDropContainers] = useState([]);
+  const [dropName, setDropName] = useState('');
   const [assigningId, setAssigningId] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = listenToAllProducts((data) => {
+    const unsubscribeProducts = listenToAllProducts((data) => {
       setProducts(data);
     });
-    return () => unsubscribe();
+    const unsubscribeDrops = listenToDropContainers((data) => {
+      setDropContainers(data);
+      if (data.length > 0 && !dropName) {
+        setDropName(data[0].name);
+      }
+    });
+    return () => {
+      unsubscribeProducts();
+      unsubscribeDrops();
+    };
   }, []);
 
   const handleAssignToDrop = async (product) => {
@@ -41,16 +51,19 @@ const AdminDropManager = () => {
       <div style={{ marginBottom: '30px', padding: '20px', backgroundColor: '#050505', border: '1px solid #1F1F1F' }}>
         <h3 style={{ color: '#FF5C00', margin: '0 0 15px 0', fontSize: '1rem' }}>TARGET_DROP_CONTAINER</h3>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <input 
-            type="text" 
+          <select 
             className="admin-input" 
             style={{ maxWidth: '300px' }}
             value={dropName}
             onChange={(e) => setDropName(e.target.value)}
-            placeholder="e.g. Drop_001"
-          />
+          >
+            <option value="" disabled>-- Select a Drop Container --</option>
+            {dropContainers.map(d => (
+              <option key={d.id} value={d.name}>{d.name}</option>
+            ))}
+          </select>
           <span style={{ fontSize: '0.8rem', color: '#888' }}>
-            {"<"} Edit name to assign items to a different collection.
+            {"<"} Select a container to assign items to a collection. (Create new containers in the Vault)
           </span>
         </div>
       </div>

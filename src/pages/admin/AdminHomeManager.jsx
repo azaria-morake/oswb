@@ -111,8 +111,21 @@ const AdminHomeManager = () => {
             )}
           </div>
           <form onSubmit={handleHeroUpload} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div className="admin-form-group" style={{ margin: 0 }}>
-              <input type="file" accept="image/*" onChange={e => setHeroImageFile(e.target.files[0])} style={{ color: '#888' }} required />
+            <div className="admin-form-group" style={{ margin: 0, flex: 1, display: 'flex' }}>
+              <label style={{ 
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                border: '1px dashed #333', padding: '20px', textAlign: 'center',
+                backgroundColor: '#0A0A0A', cursor: 'pointer', transition: 'all 0.2s ease', position: 'relative',
+                color: '#888', flex: 1, minHeight: '100px'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#FF5C00'; e.currentTarget.style.color = '#FF5C00'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#888'; }}
+              >
+                <UploadCloud size={24} style={{ marginBottom: '10px', color: 'inherit' }} />
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#FFF' }}>{heroImageFile ? heroImageFile.name : 'BROWSE HERO IMAGE'}</span>
+                
+                <input type="file" accept="image/*" onChange={e => setHeroImageFile(e.target.files[0])} style={{ opacity: 0, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', cursor: 'pointer' }} required />
+              </label>
             </div>
             <button type="submit" className="admin-btn" disabled={uploadingHero || !heroImageFile}>
               {uploadingHero ? 'UPLOADING...' : 'DEPLOY HERO IMAGE'}

@@ -14,9 +14,9 @@ const AdminLayout = () => {
       {/* Mobile Header */}
       <div className="admin-mobile-header">
         <div className="admin-brand-mobile">
-          <h1>SBC-v1.0</h1>
+          <h1>SOFFWARE_BOYZ</h1>
         </div>
-        <button className="mobile-menu-btn" onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}>
+        <button className="admin-mobile-menu-btn" onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}>
           {isMobileNavOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>

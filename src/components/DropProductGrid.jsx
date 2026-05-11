@@ -3,12 +3,12 @@ import { useCart } from '../CartContext';
 import { Plus } from 'lucide-react';
 import './DropProductGrid.css';
 
-import { listenToDrops } from '../firebase/api';
+import { listenToActiveProducts } from '../firebase/api';
 
-const DropProductGrid = ({ status = 'active', onProductClick }) => {
+const DropProductGrid = ({ dropContainer = { name: null, status: 'active' }, onProductClick }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const isUpcoming = status === 'upcoming';
+  const isUpcoming = dropContainer.status === 'upcoming';
   const { addToCart } = useCart();
 
   const handleQuickAdd = (e, product) => {
@@ -19,21 +19,28 @@ const DropProductGrid = ({ status = 'active', onProductClick }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = listenToDrops((fetchedDrops) => {
-      const filteredDrops = fetchedDrops.filter(d => d.status === status);
+    const unsubscribe = listenToActiveProducts((activeProducts) => {
+      // Filter products that belong to the active drop container
+      const filteredDrops = dropContainer.name 
+        ? activeProducts.filter(p => p.dropName === dropContainer.name)
+        : [];
+        
       const formatted = filteredDrops.map(d => ({
         ...d,
-        price: `ZAR ${d.price.toLocaleString()}`
+        // Fallback to first image if grid image isn't explicitly set (though images[0] is the grid image)
+        image: d.images?.[0] || d.image || '',
+        price: `ZAR ${d.price.toLocaleString()}`,
+        spec: `CAT: ${d.category || 'N/A'}`
       }));
       setProducts(formatted);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [status]);
+  }, [dropContainer.name]);
 
   return (
-    <section className={`drop-grid-section ${status}`}>
+    <section className={`drop-grid-section ${dropContainer.status}`}>
       {isUpcoming && <div className="scanline"></div>}
 
       <div className="drop-grid">
@@ -93,7 +100,7 @@ const DropProductGrid = ({ status = 'active', onProductClick }) => {
           </div>
         ))
         ) : (
-          <div className="empty-state">NO {status.toUpperCase()} DROPS FOUND</div>
+          <div className="empty-state">NO {dropContainer.status.toUpperCase()} DROPS FOUND</div>
         )}
       </div>
     </section>
