@@ -22,6 +22,25 @@
   flex: 1 1 auto;
 }
 
+/* ── Toggle Variant ── */
+.main-header.toggle-variant {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-bottom: none;
+}
+
+.main-header.toggle-variant .nav-btn,
+.main-header.toggle-variant .icon-btn,
+.main-header.toggle-variant .cart-btn,
+.main-header.toggle-variant .search-trigger {
+  color: #FFF;
+}
+
+.main-header.toggle-variant .nav-divider,
+.main-header.toggle-variant .header-separator {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+}
+
 /* ── Logo ── */
 .header-logo {
   flex-shrink: 0;

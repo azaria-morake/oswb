@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../CartContext';
 import { listenToActiveProducts } from '../firebase/api';
+import ToggleNavbar from '../components/ToggleNavbar';
+import ToggleProvisioningBay from '../components/ToggleProvisioningBay';
+import ToggleCartManager from '../components/ToggleCartManager';
 import './ToggleArchive.css';
 
 const ToggleArchive = ({ onProductClick }) => {
+  const { cartCount } = useCart();
   const [products, setProducts] = useState([]);
   const [registryInput, setRegistryInput] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isProvisioningOpen, setIsProvisioningOpen] = useState(false);
+  const [isCartManagerOpen, setIsCartManagerOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch products. We'll look for anything that might be Toggle related
-    // so the timeline populates for the demo.
     const unsubscribe = listenToActiveProducts((activeProducts) => {
-      const toggleProducts = activeProducts.filter(p => 
-        p.dropName === 'Toggle_Init' || 
+      const toggleProducts = activeProducts.filter(p =>
+        p.dropName === 'Toggle_Init' ||
         (p.name && p.name.toLowerCase().includes('toggle'))
       );
       setProducts(toggleProducts);
     });
     return () => unsubscribe();
   }, []);
+
 
   const handleRegistrySubmit = (e) => {
     e.preventDefault();
@@ -29,183 +35,371 @@ const ToggleArchive = ({ onProductClick }) => {
   };
 
   return (
-    <div className="toggle-archive">
-      {/* 1. HERO SECTION */}
-      <section className="toggle-hero">
-        <div className="toggle-hero-bg"></div>
-        <div className="toggle-hero-overlay"></div>
-        <div className="toggle-hero-content">
-          <motion.h1 
-            className="toggle-headline"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            TOGGLE: ITERATION 01
-          </motion.h1>
-          <motion.p 
-            className="toggle-subhead"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            The perpetual pulse of Soffware Boyz. Built with heart. Calibrated for passion.
-          </motion.p>
-          <motion.button 
-            className="toggle-cta"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            onClick={() => {
-              document.getElementById('toggle-timeline').scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            Explore the Archive
-          </motion.button>
-        </div>
-      </section>
+    <div className="toggle-page-wrapper">
 
-      {/* MAIN SPLIT */}
-      <div className="toggle-layout">
-        
-        {/* 2. SPEC SHEET SIDEBAR */}
+      {/* MOBILE NAVBAR — only shows on < 1024px */}
+      <ToggleNavbar
+        registryInput={registryInput}
+        setRegistryInput={setRegistryInput}
+        onRegistrySubmit={handleRegistrySubmit}
+        onOpenCart={() => setIsCartManagerOpen(true)}
+      />
+
+      {/* BODY ROW: sidebar + main content */}
+      <div className="toggle-body">
+
+        {/* LEFT SIDEBAR */}
         <aside className="toggle-sidebar">
-          <div className="spec-header">
-            <div className="blueprint-icon">
-              {/* Minimal line art icon placeholder */}
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="10" rx="2" />
-                <circle cx="12" cy="5" r="2" />
-                <path d="M12 7v4" />
-                <line x1="8" y1="16" x2="8" y2="16" />
-                <line x1="16" y1="16" x2="16" y2="16" />
+
+          {/* BRANDING */}
+          <div className="ts-brand">
+            <div className="ts-logo-text">TOGGLE</div>
+            <p>PERPETUAL PASSION SYSTEMS<br /><span>Soffware Boyz</span></p>
+          </div>
+
+          {/* TECHNICAL DOSSIER */}
+          <div className="ts-section">
+            <div className="ts-section-header">
+              <span>TECHNICAL DOSSIER</span>
+              <div className="ts-dot active"></div>
+            </div>
+
+            <div className="ts-blueprint">
+              {/* Robot outline graphic similar to mockup */}
+              <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="#FFF" strokeWidth="1.5">
+                <path d="M50 20 C30 20 20 40 20 60 C20 70 30 80 50 80 C70 80 80 70 80 60 C80 40 70 20 50 20 Z" />
+                <circle cx="35" cy="55" r="5" />
+                <circle cx="65" cy="55" r="5" />
+                <path d="M40 70 Q50 75 60 70" />
+                <line x1="50" y1="10" x2="50" y2="20" />
+                <circle cx="50" cy="10" r="2" fill="#FFF" />
+                <path d="M20 50 C10 50 10 70 20 70" />
+                <path d="M80 50 C90 50 90 70 80 70" />
               </svg>
             </div>
-            <div className="spec-title">
-              <h3>TOGGLE_OS</h3>
-              <p>STATUS: ACTIVE // DREAMING</p>
+
+            <div className="ts-status">
+              STATUS<br />
+              <span><span style={{ color: '#4CAF50', marginRight: '5px' }}>●</span>ACTIVE / DREAMING</span>
+            </div>
+
+            <div className="ts-section-header" style={{ marginBottom: '10px' }}>
+              <span>TECHNICAL SPECIFICATIONS</span>
+            </div>
+            <ul className="ts-specs">
+              <li>CORE: <span>High-Intensity Passion.</span></li>
+              <li>CHASSIS: <span>Retro-Futurist Alloy.</span></li>
+              <li>CURRENT MISSION: <span style={{ color: '#4CAF50' }}>LASER_BEAM_DREAMS.</span></li>
+            </ul>
+          </div>
+
+          {/* TOGGLY SCALE */}
+          <div className="ts-section">
+            <div className="ts-scale-header">
+              <span style={{ fontSize: '0.65rem', letterSpacing: '1px', color: '#888' }}>TOGGLY SCALE</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.6rem' }}>
+              <span style={{ color: '#888' }}>SINCERITY LEVELS</span>
+              <span style={{ color: '#FFF', fontSize: '1rem', fontWeight: 'bold' }}>100%</span>
+            </div>
+            <div className="ts-scale-bars">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <div key={i} className={`ts-scale-bar ${i < 20 ? 'filled' : ''}`}></div>
+              ))}
             </div>
           </div>
-          
-          <ul className="spec-list">
-            <li>Core: <span>High-Intensity Passion.</span></li>
-            <li>Chassis: <span>Retro-Futurist Alloy.</span></li>
-            <li>Current Mission: <span>LASER_BEAM_DREAMS.</span></li>
-          </ul>
 
-          <div className="toggly-scale">
-            <p>Sincerity Level [100%]</p>
-            <div className="scale-bar-container">
-              <div className="scale-bar-fill"></div>
+          {/* HARDWARE REGISTRY */}
+          <div className="ts-section" style={{ borderBottom: '1px solid #1F1F1F' }}>
+            <div className="ts-section-header">
+              <span>HARDWARE REGISTRY</span>
+              <div className="ts-dot"></div>
             </div>
-          </div>
-        </aside>
+            <p style={{ fontSize: '0.7rem', color: '#FFF', marginBottom: '10px', fontWeight: 'bold' }}>REGISTER YOUR GEAR</p>
+            <p className="ts-registry-desc">Enter your unique patch code to unlock your digital certificate and join the Toggle Network.</p>
 
-        {/* 3. RIGHT CONTENT AREA */}
-        <div className="toggle-content">
-          
-          {/* DROP TIMELINE */}
-          <section id="toggle-timeline" className="timeline-section">
-            <h2>THE LIVING ARCHIVE</h2>
-            <div className="timeline-grid">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <div key={product.id} className="timeline-item">
-                    <div className="timeline-image">
-                      <img src={product.images?.[0] || product.image} alt={product.name} />
-                    </div>
-                    <div className="timeline-details">
-                      <h3>{product.name}</h3>
-                      <p className="price">ZAR {product.price?.toLocaleString()}</p>
-                      
-                      <p className="poetic-desc">
-                        The inaugural expression. Toggle manifests his internal drive through a focused, destructive, yet beautiful beam of energy. It’s not just a weapon; it’s a love letter to the craft.
-                      </p>
-                      
-                      <button onClick={() => onProductClick && onProductClick(product)}>
-                        VIEW SPECIFICS
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div style={{ color: '#888', fontStyle: 'italic' }}>Awaiting data sync... No artifacts found.</div>
-              )}
-            </div>
-          </section>
-
-          {/* 4. HARDWARE REGISTRY */}
-          <section className="registry-section">
-            <h2>THE HARDWARE REGISTRY</h2>
-            <p>Enter the Serial Number located on your physical Toggle garment to unlock its digital certificate of authenticity.</p>
-            <form className="registry-form" onSubmit={handleRegistrySubmit}>
-              <input 
-                type="text" 
-                placeholder="e.g. TGL-01-XXXX" 
+            <form className="ts-registry-input" onSubmit={handleRegistrySubmit}>
+              <input
+                type="text"
+                placeholder="ENTER PATCH CODE"
                 value={registryInput}
                 onChange={(e) => setRegistryInput(e.target.value)}
                 required
               />
-              <button type="submit">VERIFY</button>
+              <button type="submit">→</button>
             </form>
+
+            <p className="ts-registry-desc" style={{ marginTop: '20px' }}>Where authenticity meets belonging.</p>
+            <a href="#" className="ts-learn-more">LEARN MORE →</a>
+          </div>
+
+          {/* NETWORK STATUS */}
+          <div className="ts-section" style={{ borderTop: 'none' }}>
+            <div style={{ border: '1px solid #333', padding: '15px', fontSize: '0.65rem', letterSpacing: '1px' }}>
+              <span style={{ color: '#888', display: 'block', marginBottom: '5px' }}>NETWORK STATUS</span>
+              <span style={{ color: '#FFF' }}><span style={{ color: '#4CAF50', marginRight: '5px' }}>●</span>ALL SYSTEMS PASSIONATE</span>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 'auto', paddingTop: '20px', fontSize: '0.6rem', color: '#555', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '15px' }}>
+              <span>IG</span>
+              <span>X</span>
+              <span>YT</span>
+            </div>
+            <span>© 2025 Soffware Boyz.</span>
+          </div>
+        </aside>
+
+        {/* RIGHT MAIN CONTENT */}
+        <main className="toggle-main-content">
+
+          {/* DESKTOP TOP BAR — cart icon + back to soffware boyz */}
+          <div className="tm-desktop-back-bar">
+            <button
+              className="tm-desktop-cart-btn"
+              onClick={() => setIsCartManagerOpen(true)}
+              aria-label="Open cart"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 01-8 0" />
+              </svg>
+              {cartCount > 0 && <span className="tm-desktop-cart-badge">{cartCount}</span>}
+            </button>
+            <a href="/" className="tm-desktop-back-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Back to Soffware Boyz
+            </a>
+          </div>
+
+          {/* HERO SECTION */}
+          <section className="tm-hero">
+            <div className="tm-hero-bg"></div>
+            <div className="tm-hero-overlay"></div>
+            <div className="tm-hero-content">
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                TOGGLE:<br />ITERATION 01
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.3 }}
+              >
+                The perpetual pulse of Soffware Boyz.<br />Built with heart. Calibrated for passion.
+              </motion.p>
+              <motion.div
+                className="tm-hero-actions"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.6 }}
+              >
+                <button className="tm-btn" onClick={() => document.getElementById('drop-timeline').scrollIntoView({ behavior: 'smooth' })}>
+                  EXPLORE THE ARCHIVE →
+                </button>
+                <button className="tm-btn outline" onClick={() => setIsProvisioningOpen(true)}>
+                  SHOP LATEST DROP
+                </button>
+              </motion.div>
+            </div>
           </section>
 
-          {/* 5. MOOD BOARD */}
-          <section className="moodboard-section">
-            <h2>SOURCE CODE (MOOD_BOARD)</h2>
-            <div className="moodboard-grid">
-              <div className="moodboard-item">
-                <img src="/assets/toggle/nasa_moodboard_1778458576640.png" alt="1960s NASA Control Room" />
+          {/* DROP TIMELINE */}
+          <section id="drop-timeline" className="tm-section">
+            <div className="tm-section-header">
+              <div className="dot"></div>
+              <span>DROP TIMELINE</span>
+            </div>
+
+            <div className="tm-timeline-grid">
+
+              {/* Left/Center: Timeline Items */}
+              <div className="tm-timeline-main">
+                <div className="tm-timeline-item">
+                  <div className="tm-timeline-text">
+                    <div className="tm-num">01</div>
+                    <h3>LASER BEAM LOVE PACK</h3>
+                    <p>The inaugural expression. Toggle manifests his internal drive through a focused, destructive, yet beautiful beam of energy. It's not just a weapon; it's a love letter to the craft.</p>
+
+                    <div className="tm-pack-includes">
+                      <h4>INCLUDED IN PACK</h4>
+                      <ul className="tm-pack-list">
+                        <li><span>01</span> 1x Heavyweight Tee</li>
+                        <li><span>02</span> 1x Die-Cut Vinyl Decal</li>
+                        <li><span>03</span> 1x Authentication Card</li>
+                      </ul>
+                      <a href="#" style={{ display: 'inline-block', marginTop: '20px', fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'underline', color: '#111' }}>VIEW PACK DETAILS →</a>
+                    </div>
+                  </div>
+                  <div className="tm-timeline-images">
+                    {products.length > 0 ? (
+                      <>
+                        <img src={products[0].images?.[0] || products[0].image} alt="Product Front" />
+                        <img src={products[0].images?.[1] || products[0].image} alt="Product Back" />
+                      </>
+                    ) : (
+                      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#AAA' }}>No Images</div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="tm-timeline-locked">
+                  <div className="tm-locked-left">
+                    <div className="tm-num" style={{ marginBottom: 0 }}>02</div>
+                    <div>
+                      <h4>LOCKED</h4>
+                      <p>COMING SOON</p>
+                    </div>
+                  </div>
+                  <span>+</span>
+                </div>
+
+                <div className="tm-timeline-locked">
+                  <div className="tm-locked-left">
+                    <div className="tm-num" style={{ marginBottom: 0 }}>03</div>
+                    <div>
+                      <h4>LOCKED</h4>
+                      <p>COMING SOON</p>
+                    </div>
+                  </div>
+                  <span>+</span>
+                </div>
               </div>
-              <div className="moodboard-item">
-                <img src="/assets/toggle/circuit_macro_1778458612050.png" alt="Macro Circuit Board" />
+
+              {/* Right: Registry Card */}
+              <div>
+                <div className="tm-registry-card">
+                  <div className="tm-registry-status">
+                    <span style={{ color: '#4CAF50' }}>●</span> REGISTERED ITEM
+                  </div>
+
+                  <div className="tm-registry-box">
+                    <h3>TOGGLE®</h3>
+                    <p>CERTIFICATE OF AUTHENTICITY</p>
+                    <div className="tm-hologram">
+                      <svg width="50" height="50" viewBox="0 0 100 100" fill="none" stroke="#FFF" strokeWidth="2">
+                        <circle cx="50" cy="50" r="40" />
+                        <path d="M30 40 C30 20 70 20 70 40 C70 60 50 80 50 80 C50 80 30 60 30 40 Z" />
+                        <circle cx="40" cy="40" r="5" fill="#FFF" />
+                        <circle cx="60" cy="40" r="5" fill="#FFF" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="tm-registry-info">
+                    SERIAL NUMBER
+                    <span>TGGL-01-LBL-000732</span>
+                  </div>
+                  <div className="tm-registry-info">
+                    PATCH VERSION
+                    <span>01.0.732</span>
+                  </div>
+                  <div className="tm-registry-info">
+                    REGISTERED TO
+                    <span>@passionate.dev</span>
+                  </div>
+                  <div className="tm-registry-info" style={{ marginBottom: '30px' }}>
+                    REGISTERED ON
+                    <span>24 / 05 / 2025</span>
+                  </div>
+
+                  <div className="tm-network-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /><path d="M2 12h20" /></svg>
+                    YOU ARE PART OF THE NETWORK.
+                  </div>
+                </div>
               </div>
-              <div className="moodboard-item">
-                <img src="/assets/toggle/soccer_kit_vintage_1778458651002.png" alt="Vintage Soccer Kit" />
+
+            </div>
+          </section>
+
+          {/* MOODBOARD */}
+          <section className="tm-section" style={{ paddingTop: 0 }}>
+            <div className="tm-section-header">
+              <div className="dot"></div>
+              <span>THE MOOD-BOARD</span>
+            </div>
+            <div className="tm-moodboard-grid">
+              <div className="tm-moodboard-item"><img src="/assets/toggle/media__1778452370104.png" alt="Moodboard 1" /></div>
+              <div className="tm-moodboard-item"><img src="/assets/toggle/moodboard_pc_1778461183211.png" alt="Moodboard 2" /></div>
+              <div className="tm-moodboard-item"><img src="/assets/toggle/moodboard_pele_1778461053483.png" alt="Moodboard 3" /></div>
+              <div className="tm-moodboard-item"><img src="/assets/toggle/circuit_macro_1778458612050.png" alt="Moodboard 4" /></div>
+            </div>
+          </section>
+
+          {/* COMMUNITY CAPTURES */}
+          <section className="tm-section" style={{ paddingTop: 0 }}>
+            <div className="tm-section-header" style={{ justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div className="dot"></div>
+                <span>NETWORK SYNC: COMMUNITY CAPTURES</span>
+              </div>
+              <a href="#" style={{ fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'underline', color: '#111' }}>VIEW ALL CAPTURES →</a>
+            </div>
+            <div className="tm-ugc-scroll">
+              <div className="tm-ugc-item">
+                <img src="/assets/toggle/sofflife_ugc_1_1778458696956.png" alt="UGC" />
+                <div className="tm-ugc-label">JOHANNESBURG, ZA<span>@kaybee.exe</span></div>
+              </div>
+              <div className="tm-ugc-item">
+                <img src="/assets/toggle/sofflife_ugc_1_1778458696956.png" alt="UGC" />
+                <div className="tm-ugc-label">CAPE TOWN, ZA<span>@brando.wav</span></div>
+              </div>
+              <div className="tm-ugc-item">
+                <img src="/assets/toggle/sofflife_ugc_1_1778458696956.png" alt="UGC" />
+                <div className="tm-ugc-label">DURBAN, ZA<span>@midfield.maik</span></div>
+              </div>
+              <div className="tm-ugc-item">
+                <img src="/assets/toggle/sofflife_ugc_1_1778458696956.png" alt="UGC" />
+                <div className="tm-ugc-label">PRETORIA, ZA<span>@kai.collects</span></div>
               </div>
             </div>
           </section>
 
-          {/* 6. SOFFLIFE COMMUNITY SCROLL */}
-          <section className="community-section">
-            <h2>NETWORK SYNC: COMMUNITY CAPTURES</h2>
-            <div className="community-scroll">
-              <div className="community-item">
-                <img src="/assets/toggle/sofflife_ugc_1_1778458696956.png" alt="Community Capture 1" />
-                <div className="community-label">JHB_011</div>
-              </div>
-              {/* Additional placeholder items for scrolling effect */}
-              <div className="community-item" style={{ background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ color: '#333' }}>AWAITING_UPLOAD...</span>
-              </div>
-              <div className="community-item" style={{ background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ color: '#333' }}>AWAITING_UPLOAD...</span>
-              </div>
-            </div>
-          </section>
+        </main>
 
-        </div>
-      </div>
+      </div> {/* end .toggle-body */}
+
+      {/* PROVISIONING BAY MODAL */}
+      <ToggleProvisioningBay
+        isOpen={isProvisioningOpen}
+        onClose={() => setIsProvisioningOpen(false)}
+        products={products}
+        onOpenCart={() => setIsCartManagerOpen(true)}
+      />
+
+      {/* TOGGLE CART MANAGER */}
+      <ToggleCartManager
+        isOpen={isCartManagerOpen}
+        onClose={() => setIsCartManagerOpen(false)}
+      />
 
       {/* VERIFICATION MODAL */}
       <AnimatePresence>
         {showModal && (
-          <motion.div 
+          <motion.div
             className="verification-modal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.div 
+            <motion.div
               className="verification-content"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <h3>Hardware Verified</h3>
-              <p>Your piece has been successfully authenticated against the Toggle Mainframe. It is a genuine 1-of-1 artifact.</p>
+              <h3 style={{ color: '#4CAF50', margin: '0 0 10px 0' }}>Hardware Verified</h3>
+              <p style={{ color: '#AAA' }}>Your piece has been successfully authenticated.</p>
               <div className="cert-serial">{registryInput.toUpperCase()}</div>
-              <br/>
+              <br />
               <button onClick={() => { setShowModal(false); setRegistryInput(''); }}>CLOSE TERMINAL</button>
             </motion.div>
           </motion.div>

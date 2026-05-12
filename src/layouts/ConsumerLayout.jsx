@@ -9,23 +9,30 @@ import CartManagerModal from '../components/CartManagerModal';
 import GlobalAlert from '../components/GlobalAlert';
 import { useCart } from '../CartContext';
 
+import { useLocation } from 'react-router-dom';
+
 const ConsumerLayout = ({ cartCount, selectedProduct, closeProductModal, addToCart }) => {
+  const location = useLocation();
+  const isToggleRoute = location.pathname === '/toggle';
+
   return (
-    <div className="app-container">
-      <div className="sticky-header-wrapper">
-        <TopBanner />
-        <Header cartCount={cartCount} />
-      </div>
+    <div className={`app-container ${isToggleRoute ? 'toggle-mode' : ''}`}>
+      {!isToggleRoute && (
+        <div className="sticky-header-wrapper">
+          <TopBanner />
+          <Header cartCount={cartCount} isToggle={false} />
+        </div>
+      )}
       
       <div className="content-wrapper">
         <main className="main-content">
           <Outlet />
         </main>
         
-        <CartSidebar />
+        {!isToggleRoute && <CartSidebar />}
       </div>
       
-      <Footer />
+      {!isToggleRoute && <Footer />}
       
       <ProductModal 
         isOpen={!!selectedProduct} 

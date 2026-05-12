@@ -7,7 +7,7 @@ import { Search, User, Menu, ShoppingBag, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Header.css';
 
-const Header = ({ cartCount }) => {
+const Header = ({ cartCount, isToggle }) => {
   const { triggerNotYetAlert } = useInteraction();
   const { openCartManager } = useCart();
   const { loginWithGoogle, account, logout } = useAuth();
@@ -79,12 +79,14 @@ const Header = ({ cartCount }) => {
 
   return (
     <>
-      <header className="main-header">
+      <header className={`main-header ${isToggle ? 'toggle-variant' : ''}`}>
 
         {/* Logo */}
-        <div className={`header-logo ${isSearchOpen ? 'search-active' : ''}`}>
-          <img src="/soffwareboyz.svg" alt="Soffware Boyz Logo" className="logo-img" />
-        </div>
+        {!isToggle && (
+          <div className={`header-logo ${isSearchOpen ? 'search-active' : ''}`}>
+            <img src="/soffwareboyz.svg" alt="Soffware Boyz Logo" className="logo-img" />
+          </div>
+        )}
 
         {/* Spacer — pushes nav + search right on desktop, fills gap on mobile */}
         <div className="header-spacer" />
@@ -203,113 +205,135 @@ const Header = ({ cartCount }) => {
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Drawer panel */}
-            <motion.aside
-              className="mobile-drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-            >
-              {/* Top bar */}
-              <div className="mobile-drawer-topbar">
-                <img
-                  src="/soffwareboyz.svg"
-                  alt="Soffware Boyz"
-                  className="drawer-logo"
-                />
-                <button
-                  className="drawer-close-btn"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  aria-label="Close menu"
-                >
-                  <X size={22} />
-                </button>
-              </div>
+            {/* Toggle-specific Drawer or Standard Drawer */}
+            {isToggle ? (
+              <motion.aside
+                className="mobile-drawer toggle-drawer"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+              >
+                <div className="mobile-drawer-topbar">
+                  <div className="ts-logo-text" style={{ fontSize: '1.5rem', marginBottom: 0 }}>TOGGLE</div>
+                  <button
+                    className="drawer-close-btn"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ color: '#FFF' }}
+                  >
+                    <X size={22} />
+                  </button>
+                </div>
 
-              {/* Nav links — staggered in */}
-              <nav className="drawer-nav">
-                <ul>
-                  {navLinks.map((link, i) => (
-                    <motion.li
-                      key={link}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
-                    >
-                      {link === 'Home' || link === 'Drops' || link === 'Toggle' ? (
+                <nav className="drawer-nav">
+                  <ul>
+                    {navLinks.map((link, i) => (
+                      <motion.li
+                        key={link}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
+                      >
                         <Link
                           to={link === 'Home' ? '/' : link === 'Drops' ? '/drops' : '/toggle'}
-                          className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
+                          className={`drawer-nav-link toggle-nav-link ${activeLink === link ? 'active' : ''}`}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
-                          {activeLink === link && (
-                            <motion.span
-                              layoutId="drawer-active-bar"
-                              className="drawer-active-bar"
-                            />
-                          )}
                           {link}
                         </Link>
-                      ) : (
-                        <button
-                          className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
-                          onClick={triggerNotYetAlert}
-                        >
-                          {activeLink === link && (
-                            <motion.span
-                              layoutId="drawer-active-bar"
-                              className="drawer-active-bar"
-                            />
-                          )}
-                          {link}
-                        </button>
-                      )}
-                    </motion.li>
-                  ))}
-                </ul>
-              </nav>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </nav>
 
-              {/* Ad Slideshow */}
-              <div className="drawer-ad-section">
-                <p className="drawer-ad-label">Featured</p>
-                <div className="drawer-ad-track-wrapper">
-                  {AD_SLIDES.map((src, i) => (
-                    <div
-                      key={src}
-                      className={`drawer-ad-slide ${i === adSlide ? 'active' : ''}`}
-                    >
-                      <img src={src} alt={`Featured drop ${i + 1}`} />
-                      {i === adSlide && (
-                        <div
-                          className="drawer-ad-progress"
-                          key={adSlide}
-                          style={{ '--ad-duration': `${AD_DURATION}ms` }}
-                        />
-                      )}
-                    </div>
-                  ))}
+                <div className="drawer-ad-section" style={{ borderTop: '1px solid #222' }}>
+                  <p className="drawer-ad-label" style={{ color: '#555' }}>TECHNICAL DOSSIER</p>
+                  <div className="ts-specs" style={{ padding: '0 20px', fontSize: '0.7rem' }}>
+                    <p style={{ color: '#888', margin: '10px 0' }}>STATUS: <span style={{ color: '#4CAF50' }}>● ACTIVE</span></p>
+                    <p style={{ color: '#888' }}>MISSION: <span style={{ color: '#FFF' }}>LASER_BEAM_DREAMS</span></p>
+                  </div>
                 </div>
-                <div className="drawer-ad-dots">
-                  {AD_SLIDES.map((_, i) => (
-                    <button
-                      key={i}
-                      className={`drawer-ad-dot ${i === adSlide ? 'active' : ''}`}
-                      onClick={() => setAdSlide(i)}
-                      aria-label={`Go to slide ${i + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
 
-              {/* Footer — Account */}
-              <div className="drawer-footer">
-                <button className="drawer-footer-btn" onClick={!account ? loginWithGoogle : undefined}>
-                  <User size={16} strokeWidth={1.5} />
-                  <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
-                </button>
-              </div>
-            </motion.aside>
+                <div className="drawer-footer" style={{ borderTop: '1px solid #222' }}>
+                  <p style={{ fontSize: '0.6rem', color: '#444', textAlign: 'center' }}>© 2025 SOFFWARE BOYZ</p>
+                </div>
+              </motion.aside>
+            ) : (
+              <motion.aside
+                className="mobile-drawer"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+              >
+                {/* Standard Drawer content as before */}
+                <div className="mobile-drawer-topbar">
+                  <img src="/soffwareboyz.svg" alt="Soffware Boyz" className="drawer-logo" />
+                  <button className="drawer-close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                    <X size={22} />
+                  </button>
+                </div>
+
+                <nav className="drawer-nav">
+                  <ul>
+                    {navLinks.map((link, i) => (
+                      <motion.li
+                        key={link}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.06 + 0.1, duration: 0.28, ease: 'easeOut' }}
+                      >
+                        {link === 'Home' || link === 'Drops' || link === 'Toggle' ? (
+                          <Link
+                            to={link === 'Home' ? '/' : link === 'Drops' ? '/drops' : '/toggle'}
+                            className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {activeLink === link && (
+                              <motion.span layoutId="drawer-active-bar" className="drawer-active-bar" />
+                            )}
+                            {link}
+                          </Link>
+                        ) : (
+                          <button className={`drawer-nav-link ${activeLink === link ? 'active' : ''}`} onClick={triggerNotYetAlert}>
+                            {activeLink === link && (
+                              <motion.span layoutId="drawer-active-bar" className="drawer-active-bar" />
+                            )}
+                            {link}
+                          </button>
+                        )}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </nav>
+
+                <div className="drawer-ad-section">
+                  <p className="drawer-ad-label">Featured</p>
+                  <div className="drawer-ad-track-wrapper">
+                    {AD_SLIDES.map((src, i) => (
+                      <div key={src} className={`drawer-ad-slide ${i === adSlide ? 'active' : ''}`}>
+                        <img src={src} alt={`Featured drop ${i + 1}`} />
+                        {i === adSlide && (
+                          <div className="drawer-ad-progress" key={adSlide} style={{ '--ad-duration': `${AD_DURATION}ms` }} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="drawer-ad-dots">
+                    {AD_SLIDES.map((_, i) => (
+                      <button key={i} className={`drawer-ad-dot ${i === adSlide ? 'active' : ''}`} onClick={() => setAdSlide(i)} />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="drawer-footer">
+                  <button className="drawer-footer-btn" onClick={!account ? loginWithGoogle : undefined}>
+                    <User size={16} strokeWidth={1.5} />
+                    <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
+                  </button>
+                </div>
+              </motion.aside>
+            )}
           </>
         )}
       </AnimatePresence>

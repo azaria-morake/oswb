@@ -1,0 +1,651 @@
+@import url('https://fonts.googleapis.com/css2?family=Science+Gothic:wght@400;700;900&display=swap');
+
+/* ══════════════════════════════════════════════
+   PROVISIONING BAY — Toggle-aesthetic dark modal
+   Industrial. Technical. Zero glassmorphism.
+══════════════════════════════════════════════ */
+
+/* ── Backdrop ── */
+.tpb-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 500;
+}
+
+/* ── Modal positioner (fixed flex, centered) ── */
+.tpb-positioner {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 501;
+  pointer-events: none;
+}
+
+/* ── Modal container ── */
+.tpb-modal {
+  width: min(92vw, 940px);
+  height: 85vh;
+  background: #0A0A0A;
+  border: 1px solid #2A2A2A;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  color: #FFF;
+  pointer-events: auto;
+}
+
+/* Corner accent marks */
+.tpb-modal::before,
+.tpb-modal::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #444;
+  border-style: solid;
+  pointer-events: none;
+  z-index: 1;
+}
+.tpb-modal::before {
+  top: 8px;
+  left: 8px;
+  border-width: 1px 0 0 1px;
+}
+.tpb-modal::after {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+/* ── Header ── */
+.tpb-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 28px;
+  border-bottom: 1px solid #1A1A1A;
+  flex-shrink: 0;
+}
+
+.tpb-header-left {
+  flex: 1;
+}
+
+.tpb-header-label {
+  font-size: 0.55rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.tpb-header-title {
+  font-family: 'Science Gothic', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #FFF;
+  line-height: 1;
+}
+
+/* ── Pack Toggle ── */
+.tpb-pack-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tpb-pack-label {
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #777;
+  text-align: right;
+  max-width: 120px;
+  line-height: 1.4;
+}
+
+.tpb-switch {
+  width: 44px;
+  height: 24px;
+  background: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 0;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease;
+}
+
+.tpb-switch--on {
+  border-color: #FFF;
+}
+
+.tpb-switch-thumb {
+  position: absolute;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  background: #555;
+  border-radius: 0;
+  transition: background 0.2s ease;
+}
+
+.tpb-switch--on .tpb-switch-thumb {
+  background: #FFF;
+}
+
+.tpb-connecting {
+  color: #4CAF50;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+}
+
+.tpb-dots::after {
+  content: '...';
+  animation: tpb-dot-cycle 1s steps(3, end) infinite;
+}
+
+@keyframes tpb-dot-cycle {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: '.'; }
+}
+
+/* ── Close button ── */
+.tpb-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  padding: 6px;
+  border-radius: 2px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tpb-close-btn:hover {
+  color: #FFF;
+}
+
+/* ── Header cart icon ── */
+.tpb-cart-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  padding: 6px;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.tpb-cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: #FFF;
+  color: #000;
+  font-family: 'Courier New', monospace;
+  font-size: 0.5rem;
+  font-weight: 700;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ── System bar ── */
+.tpb-system-bar {
+  display: flex;
+  gap: 24px;
+  padding: 8px 28px;
+  background: #060606;
+  border-bottom: 1px solid #1A1A1A;
+  font-size: 0.55rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #444;
+  font-family: 'Courier New', monospace;
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tpb-sys-green {
+  color: #4CAF50;
+  margin-left: auto;
+}
+
+/* ── Grid wrap ── */
+.tpb-grid-wrap {
+  flex: 1 1 0;
+  overflow-y: auto;
+  padding: 20px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #222 #0A0A0A;
+  min-height: 0;
+}
+
+.tpb-grid-wrap::-webkit-scrollbar { width: 4px; }
+.tpb-grid-wrap::-webkit-scrollbar-track { background: #0A0A0A; }
+.tpb-grid-wrap::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+.tpb-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 700px) {
+  .tpb-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Provisioning Card ── */
+.tpb-card {
+  background: #0F0F0F;
+  border: 1px solid #1E1E1E;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease;
+  position: relative;
+}
+
+.tpb-card:hover {
+  border-color: #333;
+}
+
+.tpb-card--selected {
+  border-color: #FFF !important;
+}
+
+.tpb-card--offline {
+  opacity: 0.45;
+}
+
+/* ── Card selection indicator ── */
+.tpb-card-select-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.tpb-card-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* ── Image wrap ── */
+.tpb-card-image-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  cursor: crosshair;
+  background: #111;
+}
+
+.tpb-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.tpb-card-image-wrap:hover .tpb-card-img {
+  transform: scale(1.08);
+}
+
+.tpb-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  color: #333;
+  letter-spacing: 2px;
+}
+
+/* ── Spec overlay ── */
+.tpb-card-spec-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.tpb-card-image-wrap:hover .tpb-card-spec-overlay {
+  opacity: 1;
+}
+
+.tpb-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  border-top: 1px solid #222;
+}
+
+.tpb-spec-row:first-child {
+  border-top: none;
+}
+
+.tpb-spec-label {
+  font-size: 0.5rem;
+  letter-spacing: 1.5px;
+  color: #555;
+  font-family: 'Courier New', monospace;
+}
+
+.tpb-spec-value {
+  font-size: 0.55rem;
+  color: #CCC;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── Inspection Lens ── */
+.tpb-lens {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  background-repeat: no-repeat;
+  overflow: visible;
+}
+
+.tpb-lens-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.45rem;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+}
+
+.tpb-lens-label span {
+  color: #4CAF50;
+}
+
+/* ── Card body ── */
+.tpb-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.tpb-card-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #FFF;
+  line-height: 1.3;
+}
+
+.tpb-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 8px;
+}
+
+.tpb-card-price {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFF;
+}
+
+/* ── Network Ticker ── */
+.tpb-ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.tpb-ticker--stable { color: #4CAF50; }
+.tpb-ticker--low { color: #FFA726; }
+.tpb-ticker--offline { color: #EF5350; }
+
+.tpb-blink {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: tpb-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes tpb-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* ── Add button ── */
+.tpb-add-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #111;
+  background: #FFF;
+  border: none;
+  padding: 7px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tpb-add-btn:hover:not(:disabled) {
+  background: #DDD;
+}
+
+.tpb-add-btn:disabled {
+  background: #222;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* ── Cart Particles ── */
+.tpb-particles {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.tpb-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #FFF;
+  border-radius: 50%;
+}
+
+/* ── Pack Connector SVG ── */
+.tpb-connector-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ── Empty state ── */
+.tpb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 12px;
+  color: #333;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.tpb-empty-icon {
+  font-size: 2.5rem;
+  color: #222;
+}
+
+.tpb-empty-sub {
+  font-size: 0.55rem;
+  color: #2A2A2A;
+}
+
+/* ── Footer — pack action bar ── */
+.tpb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-top: 1px solid #1A1A1A;
+  background: #060606;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+.tpb-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tpb-footer-count {
+  font-size: 0.55rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #777;
+  font-family: 'Courier New', monospace;
+}
+
+.tpb-footer-price {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  color: #FFF;
+}
+
+.tpb-provision-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #000;
+  background: #FFF;
+  border: none;
+  padding: 14px 28px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tpb-provision-btn:hover {
+  background: #DDD;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 600px) {
+  .tpb-positioner {
+    align-items: center;
+    padding: 16px;
+  }
+
+  .tpb-modal {
+    width: 100%;
+    height: 70vh;
+    max-height: 85vh;
+    border-bottom: 1px solid #2A2A2A;
+    border-radius: 4px;
+  }
+
+  .tpb-header {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .tpb-header-title {
+    font-size: 0.9rem;
+  }
+
+  .tpb-header-label {
+    font-size: 0.45rem;
+  }
+
+  .tpb-grid-wrap {
+    padding: 12px 12px;
+  }
+
+  .tpb-system-bar {
+    padding: 4px 12px;
+    font-size: 0.45rem;
+    gap: 12px;
+  }
+
+  .tpb-footer {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .tpb-provision-btn {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.65rem;
+  }
+
+  .tpb-pack-label {
+    display: none;
+  }
+}
