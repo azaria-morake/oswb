@@ -1,0 +1,390 @@
+@import url('https://fonts.googleapis.com/css2?family=Science+Gothic:wght@400;700;900&display=swap');
+
+/* ══════════════════════════════════════════════
+   TOGGLE SYSTEM DEEP-DIVE (DOSSIER)
+   A technical, editorial deep-dive into Toggle packs.
+   Industrial aesthetic, monospace accents, technical grids.
+══════════════════════════════════════════════ */
+
+.tsd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: #E6E4DD; /* Matches Toggle Archive beige */
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  color: #111;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+
+.tsd-overlay::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tsd-overlay::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+/* ── Sticky Header & Power Meter ── */
+.tsd-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(230, 228, 221, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  border-bottom: 1px solid #DCD9CE;
+  padding: 15px 40px;
+}
+
+.tsd-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tsd-breadcrumb {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.tsd-breadcrumb span {
+  color: #111;
+  font-weight: bold;
+}
+
+.tsd-close-btn {
+  background: none;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #111;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: 1px solid #111;
+  transition: all 0.2s ease;
+}
+
+.tsd-close-btn:hover {
+  background: #111;
+  color: #FFF;
+}
+
+/* ── Power Meter (LASER_OUTPUT) ── */
+.tsd-meter-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tsd-meter-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+}
+
+.tsd-meter-track {
+  flex: 1;
+  height: 4px;
+  background: #DCD9CE;
+  position: relative;
+  overflow: hidden;
+}
+
+.tsd-meter-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #da3333; /* Passion red */
+  transition: width 0.1s ease-out;
+}
+
+.tsd-meter-percent {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  font-weight: bold;
+  width: 35px;
+  text-align: right;
+}
+
+/* ── Content Container ── */
+.tsd-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+}
+
+/* ── Block A: Master Graphic ── */
+.tsd-block-a {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 120px;
+}
+
+.tsd-graphic-viewer {
+  position: relative;
+  background: #FFF;
+  border: 1px solid #DCD9CE;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.tsd-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Magnifier Lens */
+.tsd-lens {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #da3333;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 10;
+  display: none;
+}
+
+/* Love-Visor Pulse Animation */
+.tsd-visor-glow {
+  position: absolute;
+  top: 35.5%; /* Calibrated to Toggle eyes */
+  left: 44.5%;
+  width: 11%;
+  height: 5%;
+  background: radial-gradient(circle, rgba(218, 51, 51, 0.8) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.tsd-graphic-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.tsd-tag {
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem;
+  background: #111;
+  color: #FFF;
+  padding: 4px 10px;
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.tsd-title {
+  font-family: 'Science Gothic', sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 0.9;
+  margin-bottom: 30px;
+  letter-spacing: -2px;
+}
+
+.tsd-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 40px;
+}
+
+/* ── Block B: Technical Specs ── */
+.tsd-block-b {
+  border-top: 1px solid #111;
+  padding-top: 60px;
+  margin-bottom: 120px;
+}
+
+.tsd-specs-header {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+}
+
+.tsd-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.tsd-spec-item {
+  border-left: 1px solid #DCD9CE;
+  padding-left: 20px;
+}
+
+.tsd-spec-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem;
+  color: #888;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.tsd-spec-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ── Block C: The Manifest ── */
+.tsd-block-c {
+  margin-bottom: 120px;
+}
+
+.tsd-manifest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.tsd-manifest-item {
+  background: #FFF;
+  border: 1px solid #DCD9CE;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.tsd-manifest-item:hover {
+  transform: translateY(-5px);
+}
+
+.tsd-item-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  margin-bottom: 20px;
+  filter: grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+.tsd-manifest-item:hover .tsd-item-img {
+  filter: grayscale(0);
+}
+
+.tsd-item-num {
+  font-family: 'Courier New', monospace;
+  font-size: 0.6rem;
+  color: #AAA;
+  margin-bottom: 5px;
+}
+
+.tsd-item-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+/* ── The Lore Section ── */
+.tsd-lore {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 120px;
+}
+
+.tsd-lore-header {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #da3333;
+  font-weight: bold;
+  letter-spacing: 3px;
+  margin-bottom: 30px;
+}
+
+.tsd-lore-text {
+  font-family: 'Science Gothic', sans-serif;
+  font-size: 1.8rem;
+  line-height: 1.4;
+  color: #111;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ── Final CTA ── */
+.tsd-final-cta {
+  border-top: 1px solid #111;
+  padding-top: 60px;
+  text-align: center;
+}
+
+.tsd-initiate-btn {
+  width: 100%;
+  max-width: 800px;
+  background: #111;
+  color: #FFF;
+  border: none;
+  padding: 30px;
+  font-family: 'Science Gothic', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.tsd-initiate-btn:hover {
+  background: #000;
+}
+
+.tsd-initiate-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.tsd-initiate-btn:hover::after {
+  left: 100%;
+}
+
+/* ── Mobile Overrides ── */
+@media (max-width: 900px) {
+  .tsd-block-a {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .tsd-specs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tsd-manifest-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tsd-title {
+    font-size: 2.5rem;
+  }
+  
+  .tsd-header {
+    padding: 15px 20px;
+  }
+}

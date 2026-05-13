@@ -311,4 +311,112 @@ export const updateHomepageConfig = async (configData) => {
   }
 };
 
+// --- Toggle Registry ---
+
+export const verifyRegistryCode = async (code) => {
+  try {
+    const q = query(collection(db, "registry_codes"), where("code", "==", code.toUpperCase()));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      return { id: doc.id, ...doc.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error verifying registry code:", error);
+    return null;
+  }
+};
+
+export const registerHardware = async (docId, userId, handle) => {
+  try {
+    const docRef = doc(db, "registry_codes", docId);
+    await updateDoc(docRef, {
+      status: 'registered',
+      registeredTo: handle || userId,
+      registeredAt: new Date()
+    });
+    return true;
+  } catch (error) {
+    console.error("Error registering hardware:", error);
+    return false;
+  }
+};
+
+// --- Customer Dashboard ---
+
+export const listenToUserOrders = (uid, callback) => {
+  const q = query(
+    collection(db, "orders"),
+    where("userId", "==", uid)
+  );
+  return onSnapshot(q, (snap) => {
+    const orders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // Sort by createdAt descending (client-side to avoid composite index requirement)
+    orders.sort((a, b) => {
+      const aTime = a.createdAt?.seconds || 0;
+      const bTime = b.createdAt?.seconds || 0;
+      return bTime - aTime;
+    });
+    callback(orders);
+  }, (error) => {
+    console.error("Error listening to user orders:", error);
+    callback([]);
+  });
+};
+
+export const listenToUserLoadouts = (uid, callback) => {
+  const q = query(
+    collection(db, "loadouts"),
+    where("userId", "==", uid)
+  );
+  return onSnapshot(q, (snap) => {
+    callback(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  }, (error) => {
+    console.error("Error listening to user loadouts:", error);
+    callback([]);
+  });
+};
+
+export const updateShippingAddress = async (uid, address) => {
+  try {
+    await setDoc(doc(db, "accounts", uid), { shippingAddress: address }, { merge: true });
+    return true;
+  } catch (error) {
+    console.error("Error updating shipping address:", error);
+    return false;
+  }
+};
+
+export const submitSupportTicket = async (uid, orderId, reason, details = '') => {
+  try {
+    await addDoc(collection(db, "support_tickets"), {
+      userId: uid,
+      orderId,
+      reason,
+      details,
+      status: 'open',
+      createdAt: new Date()
+    });
+    return true;
+  } catch (error) {
+    console.error("Error submitting support ticket:", error);
+    return false;
+  }
+};
+
+export const createOrder = async (uid, orderData) => {
+  try {
+    const docRef = await addDoc(collection(db, "orders"), {
+      userId: uid,
+      ...orderData,
+      status: 'processing',
+      createdAt: new Date()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Error creating order:", error);
+    return null;
+  }
+};
 

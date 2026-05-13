@@ -14,10 +14,12 @@ import { useLocation } from 'react-router-dom';
 const ConsumerLayout = ({ cartCount, selectedProduct, closeProductModal, addToCart }) => {
   const location = useLocation();
   const isToggleRoute = location.pathname === '/toggle';
+  const isDashboardRoute = location.pathname === '/dashboard';
+  const isChromelessRoute = isToggleRoute || isDashboardRoute;
 
   return (
     <div className={`app-container ${isToggleRoute ? 'toggle-mode' : ''}`}>
-      {!isToggleRoute && (
+      {!isChromelessRoute && (
         <div className="sticky-header-wrapper">
           <TopBanner />
           <Header cartCount={cartCount} isToggle={false} />
@@ -29,10 +31,10 @@ const ConsumerLayout = ({ cartCount, selectedProduct, closeProductModal, addToCa
           <Outlet />
         </main>
         
-        {!isToggleRoute && <CartSidebar />}
+        {!isChromelessRoute && <CartSidebar />}
       </div>
       
-      {!isToggleRoute && <Footer />}
+      {!isChromelessRoute && <Footer />}
       
       <ProductModal 
         isOpen={!!selectedProduct} 

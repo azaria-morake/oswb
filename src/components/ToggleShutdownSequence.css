@@ -1,0 +1,86 @@
+.tss-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  font-family: 'Courier New', monospace;
+}
+
+.tss-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+}
+
+.tss-terminal {
+  border: 1px solid #da3333; /* Passion red border for shutdown */
+  background: #050000;
+  box-shadow: 0 0 50px rgba(218, 51, 51, 0.1);
+}
+
+.tss-header {
+  background: #1a0505;
+  padding: 10px 15px;
+  border-bottom: 1px solid #da3333;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: #da3333;
+}
+
+.tss-content {
+  padding: 30px;
+  min-height: 250px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.tss-line {
+  margin-bottom: 8px;
+}
+
+.tss-prompt {
+  color: #da3333;
+  margin-right: 10px;
+}
+
+.tss-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #da3333;
+  vertical-align: middle;
+}
+
+.tss-footer {
+  padding: 15px 30px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tss-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #221111;
+  position: relative;
+  overflow: hidden;
+}
+
+.tss-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #da3333;
+}
+
+.tss-percent {
+  font-size: 0.75rem;
+  width: 40px;
+  text-align: right;
+  color: #da3333;
+}

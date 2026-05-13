@@ -1,0 +1,308 @@
+.tco-overlay {
+  position: fixed;
+  inset: 0;
+  background: #E6E4DD; /* Matches Toggle Archive beige */
+  z-index: 11000;
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+  color: #111;
+}
+
+.tco-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.tco-header {
+  margin-bottom: 60px;
+}
+
+.tco-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tco-breadcrumb {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.tco-breadcrumb span {
+  color: #111;
+  font-weight: bold;
+}
+
+.tco-close-btn {
+  background: none;
+  border: 1px solid #111;
+  padding: 6px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tco-close-btn:hover {
+  background: #111;
+  color: #FFF;
+}
+
+.tco-stepper {
+  display: flex;
+  gap: 10px;
+}
+
+.tco-step-dot {
+  flex: 1;
+  height: 4px;
+  background: #DCD9CE;
+}
+
+.tco-step-dot.active {
+  background: #111;
+}
+
+/* ── PHASES ── */
+.tco-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tco-phase {
+  width: 100%;
+  max-width: 600px;
+}
+
+.tco-center {
+  text-align: center;
+}
+
+.tco-phase-title {
+  font-family: 'Science Gothic', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.tco-phase-desc {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+/* Manifest List */
+.tco-manifest-list {
+  background: #FFF;
+  border: 1px solid #DCD9CE;
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.tco-manifest-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #F5F4F0;
+}
+
+.tco-manifest-item:last-of-type {
+  border-bottom: none;
+}
+
+.tco-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tco-item-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.tco-item-qty {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.tco-item-price {
+  font-weight: 600;
+}
+
+.tco-manifest-total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #111;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+/* Form */
+.tco-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.tco-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tco-input-group.full {
+  grid-column: span 2;
+}
+
+.tco-input-group label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #888;
+}
+
+.tco-input-group input {
+  background: #FFF;
+  border: 1px solid #DCD9CE;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.tco-input-group input:focus {
+  border-color: #111;
+}
+
+/* Buttons */
+.tco-primary-btn {
+  width: 100%;
+  background: #111;
+  color: #FFF;
+  border: none;
+  padding: 20px;
+  font-family: 'Science Gothic', sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tco-primary-btn:hover {
+  background: #000;
+}
+
+.tco-secondary-btn {
+  background: transparent;
+  border: 1px solid #DCD9CE;
+  padding: 15px 25px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tco-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.tco-actions .tco-primary-btn {
+  flex: 2;
+}
+
+/* Loader */
+.tco-loader {
+  width: 100%;
+  height: 6px;
+  background: #DCD9CE;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tco-loader-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #111;
+}
+
+.tco-status-logs {
+  margin-top: 40px;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.tco-log {
+  margin-bottom: 5px;
+}
+
+/* Success */
+.tco-success-icon {
+  width: 80px;
+  height: 80px;
+  background: #4CAF50;
+  color: #FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 30px;
+}
+
+.tco-order-card {
+  background: #FFF;
+  border: 1px solid #DCD9CE;
+  padding: 30px;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.tco-order-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+.tco-serial {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .tco-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .tco-input-group.full {
+    grid-column: span 1;
+  }
+  .tco-actions {
+    flex-direction: column-reverse;
+  }
+}

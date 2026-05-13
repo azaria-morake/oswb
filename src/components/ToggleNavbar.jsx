@@ -5,7 +5,7 @@ import { useCart } from '../CartContext';
 import './ToggleNavbar.css';
 
 /* ── Sidebar content (mirrors desktop sidebar in ToggleArchive) ── */
-const ToggleSideMenu = ({ isOpen, onClose, registryInput, setRegistryInput, onRegistrySubmit }) => {
+const ToggleSideMenu = ({ isOpen, onClose, registryInput, setRegistryInput, onRegistrySubmit, onLogout }) => {
   // Lock body scroll while menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -154,7 +154,7 @@ const ToggleSideMenu = ({ isOpen, onClose, registryInput, setRegistryInput, onRe
             <div className="tn-sidemenu-footer">
               <button
                 className="tn-back-btn"
-                onClick={() => { onClose(); navigate('/'); }}
+                onClick={() => { onClose(); onLogout(); }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="15 18 9 12 15 6" />
@@ -170,7 +170,7 @@ const ToggleSideMenu = ({ isOpen, onClose, registryInput, setRegistryInput, onRe
 };
 
 /* ── Toggle Navbar ── */
-const ToggleNavbar = ({ registryInput, setRegistryInput, onRegistrySubmit, onOpenCart }) => {
+const ToggleNavbar = ({ registryInput, setRegistryInput, onRegistrySubmit, onOpenCart, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { cartCount } = useCart();
 
@@ -210,6 +210,7 @@ const ToggleNavbar = ({ registryInput, setRegistryInput, onRegistrySubmit, onOpe
         registryInput={registryInput}
         setRegistryInput={setRegistryInput}
         onRegistrySubmit={onRegistrySubmit}
+        onLogout={onLogout}
       />
     </>
   );

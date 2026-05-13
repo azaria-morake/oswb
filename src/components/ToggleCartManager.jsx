@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../CartContext';
 import './ToggleCartManager.css';
 
-const ToggleCartManager = ({ isOpen, onClose }) => {
+const ToggleCartManager = ({ isOpen, onClose, onCheckout }) => {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
@@ -181,7 +181,7 @@ const ToggleCartManager = ({ isOpen, onClose }) => {
                     <button
                       className="tcm-checkout-btn"
                       disabled={grouped.length === 0}
-                      onClick={() => alert('CHECKOUT_FLOW: Initializing...')}
+                      onClick={onCheckout}
                     >
                       DEPLOY ORDER →
                     </button>

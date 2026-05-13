@@ -165,8 +165,12 @@ const Header = ({ cartCount, isToggle }) => {
         <div className="header-actions">
           <div className="header-separator desktop-only" />
           <button className="icon-btn desktop-only" onClick={!account ? loginWithGoogle : undefined}>
-            <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
-            <User size={20} strokeWidth={1.5} />
+            {account
+              ? <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'inherit', textDecoration: 'none' }}>
+                  <span>{account.displayName?.split(' ')[0].toUpperCase()}</span>
+                  <User size={20} strokeWidth={1.5} />
+                </Link>
+              : <><span>LOGIN</span><User size={20} strokeWidth={1.5} /></>}
           </button>
           <div className="header-separator desktop-only" />
 
@@ -327,10 +331,17 @@ const Header = ({ cartCount, isToggle }) => {
                 </div>
 
                 <div className="drawer-footer">
-                  <button className="drawer-footer-btn" onClick={!account ? loginWithGoogle : undefined}>
-                    <User size={16} strokeWidth={1.5} />
-                    <span>{account ? account.displayName?.split(' ')[0].toUpperCase() : 'LOGIN'}</span>
-                  </button>
+                  {account ? (
+                    <Link to="/dashboard" className="drawer-footer-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                      <User size={16} strokeWidth={1.5} />
+                      <span>MY TERMINAL</span>
+                    </Link>
+                  ) : (
+                    <button className="drawer-footer-btn" onClick={loginWithGoogle}>
+                      <User size={16} strokeWidth={1.5} />
+                      <span>LOGIN</span>
+                    </button>
+                  )}
                 </div>
               </motion.aside>
             )}

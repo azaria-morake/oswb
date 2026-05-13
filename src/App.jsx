@@ -18,6 +18,7 @@ import AdminOverview from './pages/admin/AdminOverview';
 import AdminDropManager from './pages/admin/AdminDropManager';
 import AdminProductVault from './pages/admin/AdminProductVault';
 import AdminHomeManager from './pages/admin/AdminHomeManager';
+import CustomerDashboard from './pages/CustomerDashboard';
 
 import { useCart } from './CartContext';
 
@@ -67,6 +68,7 @@ function App() {
                   />
                 } 
               />
+              <Route path="dashboard" element={<CustomerDashboard />} />
             </Route>
 
             {/* Admin Routes */}

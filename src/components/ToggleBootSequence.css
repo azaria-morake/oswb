@@ -1,0 +1,86 @@
+.tbs-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFF;
+  font-family: 'Courier New', monospace;
+}
+
+.tbs-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+}
+
+.tbs-terminal {
+  border: 1px solid #333;
+  background: #050505;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+.tbs-header {
+  background: #111;
+  padding: 10px 15px;
+  border-bottom: 1px solid #333;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.tbs-content {
+  padding: 30px;
+  min-height: 250px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.tbs-line {
+  margin-bottom: 8px;
+}
+
+.tbs-prompt {
+  color: #da3333;
+  margin-right: 10px;
+}
+
+.tbs-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #FFF;
+  vertical-align: middle;
+}
+
+.tbs-footer {
+  padding: 15px 30px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.tbs-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #222;
+  position: relative;
+  overflow: hidden;
+}
+
+.tbs-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #FFF;
+}
+
+.tbs-percent {
+  font-size: 0.75rem;
+  width: 40px;
+  text-align: right;
+  color: #888;
+}

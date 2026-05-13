@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../CartContext';
-import { listenToActiveProducts } from '../firebase/api';
+import { listenToActiveProducts, verifyRegistryCode } from '../firebase/api';
 import ToggleNavbar from '../components/ToggleNavbar';
 import ToggleProvisioningBay from '../components/ToggleProvisioningBay';
 import ToggleCartManager from '../components/ToggleCartManager';
+import ToggleSystemDeepDive from '../components/ToggleSystemDeepDive';
+import ToggleBootSequence from '../components/ToggleBootSequence';
+import ToggleShutdownSequence from '../components/ToggleShutdownSequence';
+import ToggleCheckout from '../components/ToggleCheckout';
 import './ToggleArchive.css';
 
 const ToggleArchive = ({ onProductClick }) => {
@@ -14,6 +19,14 @@ const ToggleArchive = ({ onProductClick }) => {
   const [showModal, setShowModal] = useState(false);
   const [isProvisioningOpen, setIsProvisioningOpen] = useState(false);
   const [isCartManagerOpen, setIsCartManagerOpen] = useState(false);
+  const [activeDossier, setActiveDossier] = useState(null);
+  const [verifiedData, setVerifiedData] = useState(null);
+  const [registryError, setRegistryError] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
+  const [isShuttingDown, setIsShuttingDown] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = listenToActiveProducts((activeProducts) => {
@@ -27,15 +40,44 @@ const ToggleArchive = ({ onProductClick }) => {
   }, []);
 
 
-  const handleRegistrySubmit = (e) => {
+  const handleRegistrySubmit = async (e) => {
     e.preventDefault();
-    if (registryInput.trim()) {
-      setShowModal(true);
+    if (!registryInput.trim()) return;
+
+    setIsVerifying(true);
+    setRegistryError(false);
+
+    try {
+      const data = await verifyRegistryCode(registryInput);
+      if (data) {
+        setVerifiedData(data);
+        setShowModal(true);
+      } else {
+        setRegistryError(true);
+        // Reset error after 3 seconds
+        setTimeout(() => setRegistryError(false), 3000);
+      }
+    } catch (err) {
+      console.error("Registry error:", err);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
   return (
     <div className="toggle-page-wrapper">
+
+      {/* SYSTEM BOOT SEQUENCE */}
+      <AnimatePresence>
+        {isBooting && <ToggleBootSequence onComplete={() => setIsBooting(false)} />}
+      </AnimatePresence>
+
+      {/* SYSTEM SHUTDOWN SEQUENCE */}
+      <AnimatePresence>
+        {isShuttingDown && (
+          <ToggleShutdownSequence onComplete={() => navigate('/')} />
+        )}
+      </AnimatePresence>
 
       {/* MOBILE NAVBAR — only shows on < 1024px */}
       <ToggleNavbar
@@ -43,6 +85,7 @@ const ToggleArchive = ({ onProductClick }) => {
         setRegistryInput={setRegistryInput}
         onRegistrySubmit={handleRegistrySubmit}
         onOpenCart={() => setIsCartManagerOpen(true)}
+        onLogout={() => setIsShuttingDown(true)}
       />
 
       {/* BODY ROW: sidebar + main content */}
@@ -121,12 +164,16 @@ const ToggleArchive = ({ onProductClick }) => {
             <form className="ts-registry-input" onSubmit={handleRegistrySubmit}>
               <input
                 type="text"
-                placeholder="ENTER PATCH CODE"
+                placeholder={registryError ? "INVALID CODE" : "ENTER PATCH CODE"}
                 value={registryInput}
                 onChange={(e) => setRegistryInput(e.target.value)}
+                disabled={isVerifying}
+                style={{ color: registryError ? '#da3333' : '#FFF' }}
                 required
               />
-              <button type="submit">→</button>
+              <button type="submit" disabled={isVerifying}>
+                {isVerifying ? '...' : '→'}
+              </button>
             </form>
 
             <p className="ts-registry-desc" style={{ marginTop: '20px' }}>Where authenticity meets belonging.</p>
@@ -136,8 +183,21 @@ const ToggleArchive = ({ onProductClick }) => {
           {/* NETWORK STATUS */}
           <div className="ts-section" style={{ borderTop: 'none' }}>
             <div style={{ border: '1px solid #333', padding: '15px', fontSize: '0.65rem', letterSpacing: '1px' }}>
-              <span style={{ color: '#888', display: 'block', marginBottom: '5px' }}>NETWORK STATUS</span>
-              <span style={{ color: '#FFF' }}><span style={{ color: '#4CAF50', marginRight: '5px' }}>●</span>ALL SYSTEMS PASSIONATE</span>
+              <span style={{ color: '#888', display: 'block', marginBottom: '12px' }}>SYSTEM TELEMETRY</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#AAA' }}>ACTIVE_UNITS:</span>
+                  <span style={{ color: '#FFF' }}>{products.reduce((acc, p) => acc + (p.stock || 0), 0)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#AAA' }}>NETWORK_LOAD:</span>
+                  <span style={{ color: '#FFF' }}>01.0.732</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#AAA' }}>STATUS:</span>
+                  <span style={{ color: '#4CAF50' }}>● ONLINE</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -168,12 +228,16 @@ const ToggleArchive = ({ onProductClick }) => {
               </svg>
               {cartCount > 0 && <span className="tm-desktop-cart-badge">{cartCount}</span>}
             </button>
-            <a href="/" className="tm-desktop-back-btn">
+            <button 
+              onClick={() => setIsShuttingDown(true)} 
+              className="tm-desktop-back-btn"
+              style={{ background: '#111', cursor: 'pointer', border: '1px solid #333' }}
+            >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
               Back to Soffware Boyz
-            </a>
+            </button>
           </div>
 
           {/* HERO SECTION */}
@@ -235,7 +299,26 @@ const ToggleArchive = ({ onProductClick }) => {
                         <li><span>02</span> 1x Die-Cut Vinyl Decal</li>
                         <li><span>03</span> 1x Authentication Card</li>
                       </ul>
-                      <a href="#" style={{ display: 'inline-block', marginTop: '20px', fontSize: '0.75rem', fontWeight: 'bold', textDecoration: 'underline', color: '#111' }}>VIEW PACK DETAILS →</a>
+                      <button 
+                        onClick={() => setActiveDossier({
+                          title: 'LASER BEAM LOVE PACK',
+                          image: products[0]?.images?.[0] || products[0]?.image || '/assets/toggle/media__1778452370104.png'
+                        })}
+                        style={{ 
+                          display: 'inline-block', 
+                          marginTop: '20px', 
+                          fontSize: '0.75rem', 
+                          fontWeight: 'bold', 
+                          textDecoration: 'underline', 
+                          color: '#111',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        VIEW PACK DETAILS →
+                      </button>
                     </div>
                   </div>
                   <div className="tm-timeline-images">
@@ -250,7 +333,7 @@ const ToggleArchive = ({ onProductClick }) => {
                   </div>
                 </div>
 
-                <div className="tm-timeline-locked">
+                <div className="tm-timeline-locked" onClick={() => setActiveDossier({ title: 'v2.0_ENCRYPTED', isLocked: true })} style={{ cursor: 'pointer' }}>
                   <div className="tm-locked-left">
                     <div className="tm-num" style={{ marginBottom: 0 }}>02</div>
                     <div>
@@ -261,7 +344,7 @@ const ToggleArchive = ({ onProductClick }) => {
                   <span>+</span>
                 </div>
 
-                <div className="tm-timeline-locked">
+                <div className="tm-timeline-locked" onClick={() => setActiveDossier({ title: 'v3.0_ENCRYPTED', isLocked: true })} style={{ cursor: 'pointer' }}>
                   <div className="tm-locked-left">
                     <div className="tm-num" style={{ marginBottom: 0 }}>03</div>
                     <div>
@@ -367,6 +450,20 @@ const ToggleArchive = ({ onProductClick }) => {
 
       </div> {/* end .toggle-body */}
 
+      {/* SYSTEM DEEP-DIVE OVERLAY */}
+      <AnimatePresence>
+        {activeDossier && (
+          <ToggleSystemDeepDive 
+            pack={activeDossier}
+            onClose={() => setActiveDossier(null)}
+            onInitiateProvisioning={() => {
+              setActiveDossier(null);
+              setIsProvisioningOpen(true);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* PROVISIONING BAY MODAL */}
       <ToggleProvisioningBay
         isOpen={isProvisioningOpen}
@@ -379,6 +476,16 @@ const ToggleArchive = ({ onProductClick }) => {
       <ToggleCartManager
         isOpen={isCartManagerOpen}
         onClose={() => setIsCartManagerOpen(false)}
+        onCheckout={() => {
+          setIsCartManagerOpen(false);
+          setIsCheckoutOpen(true);
+        }}
+      />
+
+      {/* TOGGLE CHECKOUT */}
+      <ToggleCheckout 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
       />
 
       {/* VERIFICATION MODAL */}
@@ -396,11 +503,30 @@ const ToggleArchive = ({ onProductClick }) => {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
             >
-              <h3 style={{ color: '#4CAF50', margin: '0 0 10px 0' }}>Hardware Verified</h3>
-              <p style={{ color: '#AAA' }}>Your piece has been successfully authenticated.</p>
-              <div className="cert-serial">{registryInput.toUpperCase()}</div>
-              <br />
-              <button onClick={() => { setShowModal(false); setRegistryInput(''); }}>CLOSE TERMINAL</button>
+              <h3 style={{ color: '#4CAF50', margin: '0 0 10px 0' }}>
+                {verifiedData?.status === 'registered' ? 'Hardware Registry Found' : 'Hardware Verified'}
+              </h3>
+              <p style={{ color: '#AAA' }}>
+                {verifiedData?.status === 'registered' 
+                  ? 'This unit is already part of the active network.' 
+                  : 'Your piece has been successfully authenticated.'}
+              </p>
+              <div className="cert-serial">{verifiedData?.code || registryInput.toUpperCase()}</div>
+              
+              {verifiedData && (
+                <div style={{ margin: '20px 0', textAlign: 'left', fontSize: '0.7rem', fontFamily: 'monospace', border: '1px solid #333', padding: '15px' }}>
+                  <div style={{ color: '#888', marginBottom: '5px' }}>SYSTEM_REPORT:</div>
+                  <div>VERSION: {verifiedData.version || 'v1.0.0'}</div>
+                  <div>STATUS: {verifiedData.status?.toUpperCase()}</div>
+                  {verifiedData.registeredTo && (
+                    <div style={{ color: '#4CAF50', marginTop: '5px' }}>OWNER: {verifiedData.registeredTo.toUpperCase()}</div>
+                  )}
+                </div>
+              )}
+              
+              <button onClick={() => { setShowModal(false); setRegistryInput(''); setVerifiedData(null); }}>
+                CLOSE TERMINAL
+              </button>
             </motion.div>
           </motion.div>
         )}
